@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: SG1
+      author: Saubhagya
+      comment: Create app user table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: app_user_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: first_name
+                  type: VARCHAR
+              - column:
+                  name: last_name
+                  type: VARCHAR
+              - column:
+                  name: username
+                  type: VARCHAR
+              - column:
+                  name: email
+                  type: VARCHAR
+              - column:
+                  name: password
+                  type: VARCHAR
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+            tableName: app_user
+
+  - changeSet:
+      id: SG2
+      author: Saubhagya
+      comment: Create role table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: role_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR
+            tableName: role
+
