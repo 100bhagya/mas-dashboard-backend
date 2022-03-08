@@ -25,9 +25,10 @@ public class AppUser {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-//  private String name;
+  private String name;
 
-//  private String last_name;
+  private String last_name;
+
   @NotBlank
   @Size(max = 20)
   private String username;

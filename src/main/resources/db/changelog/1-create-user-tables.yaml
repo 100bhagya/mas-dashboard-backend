@@ -14,8 +14,6 @@ databaseChangeLog:
                   name: id
                   type: BIGSERIAL
               - column:
-                  constraints:
-                    nullable: false
                   name: first_name
                   type: VARCHAR
               - column:
