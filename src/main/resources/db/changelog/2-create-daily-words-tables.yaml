@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: SG1
+      author: Saubhagya
+      comment: Create daily words table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: daily_words_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: word_one
+                  type: VARCHAR
+              - column:
+                  name: word_one_cat
+                  type: VARCHAR
+              - column:
+                  name: word_one_meaning
+                  type: VARCHAR
+              - column:
+                  name: word_two
+                  type: VARCHAR
+              - column:
+                  name: word_two_cat
+                  type: VARCHAR
+              - column:
+                  name: word_two_meaning
+                  type: VARCHAR
+              - column:
+                  name: date
+                  type: VARCHAR
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
+                  name: created_date
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP WITH TIME ZONE
+            remarks: This table stores words of the day
+            tableName: daily_words
+
+  - changeSet:
+      id: SG2
+      author: Saubhagya
+      comment: Create daily words response table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: daily_words_response_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: daily_words_id
+                  type: BIGINT
+              - column:
+                  name: student_id
+                  type: BIGINT
+              - column:
+                  name: response_one
+                  type: VARCHAR
+              - column:
+                  name: response_two
+                  type: VARCHAR
+              - column:
+                  name: completed
+                  type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
+                  name: created_date
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP WITH TIME ZONE
+            remarks: This table stores words of the day responses
+            tableName: daily_words_response
