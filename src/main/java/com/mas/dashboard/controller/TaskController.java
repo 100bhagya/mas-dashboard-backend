@@ -2,6 +2,7 @@ package com.mas.dashboard.controller;
 
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
+import com.mas.dashboard.dto.WeeklySummaryDto;
 import com.mas.dashboard.entity.AppUser;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.service.TaskService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -60,6 +62,24 @@ public class TaskController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<DailyWordsResponseDto> updateDailyWordsResponse (@RequestBody final DailyWordsResponseDto dailyWordsResponseDto) {
         return new ResponseEntity<>(this.taskService.updateDailyWordsResponse(dailyWordsResponseDto), HttpStatus.OK);
+    }
 
+    @GetMapping("/daily-words/check-status")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<Integer, Boolean>> checkDailyWordsCompletedStatus (@RequestParam final Integer monthName,
+                                                                                 @RequestParam final Integer year) {
+        return new ResponseEntity<>(this.taskService.checkDailyWordsCompletedStatus(monthName, year), HttpStatus.OK);
+    }
+
+    @PostMapping("/weekly-summary")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<WeeklySummaryDto> saveWeeklySummary (@RequestBody final WeeklySummaryDto weeklySummaryDto) {
+        return new ResponseEntity<>(this.taskService.saveWeeklySummary(weeklySummaryDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/weekly-summary")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<WeeklySummaryDto>> getWeeklySummary (@RequestParam final Date date) {
+        return new ResponseEntity<>(this.taskService.getWeeklySummary(date), HttpStatus.OK);
     }
 }

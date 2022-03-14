@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: SG1
+      author: Saubhagya
+      comment: Create weekly summary table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: weekly_summary_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: article_topic
+                  type: VARCHAR
+              - column:
+                  name: article_text
+                  type: TEXT
+              - column:
+                  name: read_time
+                  type: BIGINT
+              - column:
+                  name: date
+                  type: VARCHAR
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
+                  name: created_date
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP WITH TIME ZONE
+            remarks: This table stores weekly summary
+            tableName: weekly_summary
+

@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: classpath:db/changelog/1-create-user-tables.yaml
+  - include:
+      file: classpath:db/changelog/2-create-daily-words-tables.yaml
