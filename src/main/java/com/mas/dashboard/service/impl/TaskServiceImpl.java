@@ -2,16 +2,22 @@ package com.mas.dashboard.service.impl;
 
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
+import com.mas.dashboard.dto.WeeklySummaryDto;
 import com.mas.dashboard.entity.DailyWords;
 import com.mas.dashboard.entity.DailyWordsResponse;
+import com.mas.dashboard.entity.WeeklySummary;
 import com.mas.dashboard.mapper.DailyWordsMapper;
 import com.mas.dashboard.mapper.DailyWordsResponseMapper;
+import com.mas.dashboard.mapper.WeeklySummaryMapper;
 import com.mas.dashboard.repository.DailyWordRepository;
 import com.mas.dashboard.repository.DailyWordsResponseRepository;
+import com.mas.dashboard.repository.WeeklySummaryRepository;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -23,9 +29,14 @@ public class TaskServiceImpl implements TaskService {
   @Autowired
   private DailyWordsResponseRepository dailyWordsResponseRepository;
 
+  @Autowired
+  private WeeklySummaryRepository weeklySummaryRepository;
+
   private static final DailyWordsMapper DAILY_WORDS_MAPPER = DailyWordsMapper.INSTANCE;
 
   private static final DailyWordsResponseMapper DAILY_WORDS_RESPONSE_MAPPER = DailyWordsResponseMapper.INSTANCE;
+
+  private static final WeeklySummaryMapper WEEKLY_SUMMARY_MAPPER = WeeklySummaryMapper.INSTANCE;
 
   public List<DailyWordsDto> saveDailyWords(List<DailyWordsDto> dailyWordsRequestList) {
     final List<DailyWords> dailyWordsList = new ArrayList<>();
@@ -88,5 +99,34 @@ public class TaskServiceImpl implements TaskService {
       dailyWordsResponse.setCompleted(Boolean.TRUE);
     }
     return DAILY_WORDS_RESPONSE_MAPPER.toDailyWordsResponseDto(dailyWordsResponse);
+  }
+
+  public Map<Integer, Boolean> checkDailyWordsCompletedStatus (final Integer month, final Integer year) {
+    final Date date = new Date();
+    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    int todayMonth = localDate.getMonthValue();
+    int todayYear = localDate.getYear();
+    int todayDay = localDate.getDayOfMonth();
+    // TODO: Write logic for this method
+    return null;
+  }
+
+  public WeeklySummaryDto saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
+    final Integer weeklySummaryCountByDate = this.weeklySummaryRepository.findCountByDateAndDeletedFalse(weeklySummaryDto.getDate());
+    if (weeklySummaryCountByDate >= 2) {
+      throw new IllegalArgumentException("Weekly summary already exists for the given date");
+    }
+    this.weeklySummaryRepository.save(WEEKLY_SUMMARY_MAPPER.toWeeklySummaryEntity(weeklySummaryDto));
+    return weeklySummaryDto;
+  }
+
+  public List<WeeklySummaryDto> getWeeklySummary (final Date date) {
+    final Optional<List<WeeklySummary>> optionalWeeklySummaryDtoList = this.weeklySummaryRepository.
+        findAllByDateAndDeletedFalse(date);
+    if (!optionalWeeklySummaryDtoList.isPresent()) {
+      throw new IllegalArgumentException("Weekly Summary not found for the given date");
+    }
+    final List<WeeklySummary> weeklySummaries = optionalWeeklySummaryDtoList.get();
+    return WEEKLY_SUMMARY_MAPPER.toWeeklySummaryDtoList(weeklySummaries);
   }
 }
