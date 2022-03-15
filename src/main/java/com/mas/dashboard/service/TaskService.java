@@ -3,6 +3,8 @@ package com.mas.dashboard.service;
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
 import com.mas.dashboard.dto.WeeklySummaryDto;
+import com.mas.dashboard.dto.WeeklySummaryResponseDto;
+import com.mas.dashboard.entity.WeeklySummaryResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -25,4 +27,6 @@ public interface TaskService {
   WeeklySummaryDto saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 
   List<WeeklySummaryDto> getWeeklySummary (final Date date);
+
+  WeeklySummaryResponseDto saveWeeklySummaryResponse(final WeeklySummaryResponseDto weeklySummaryResponseDto);
 }

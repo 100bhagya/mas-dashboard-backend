@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class WeeklySummaryDto {
+
   private Long id;
 
   private String articleTopic;

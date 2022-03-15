@@ -3,6 +3,7 @@ package com.mas.dashboard.controller;
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
 import com.mas.dashboard.dto.WeeklySummaryDto;
+import com.mas.dashboard.dto.WeeklySummaryResponseDto;
 import com.mas.dashboard.entity.AppUser;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.service.TaskService;
@@ -81,5 +82,11 @@ public class TaskController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<WeeklySummaryDto>> getWeeklySummary (@RequestParam final Date date) {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(date), HttpStatus.OK);
+    }
+
+    @PostMapping("/weekly-summary-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<WeeklySummaryResponseDto> saveWeeklySummaryResponse (@RequestBody final WeeklySummaryResponseDto weeklySummaryResponseDto) {
+        return new ResponseEntity<>(this.taskService.saveWeeklySummaryResponse(weeklySummaryResponseDto), HttpStatus.CREATED);
     }
 }

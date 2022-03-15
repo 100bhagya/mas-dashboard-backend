@@ -13,6 +13,8 @@ import java.util.Date;
 @Entity
 @Table(name = "weekly_summary")
 public class WeeklySummary {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String articleTopic;
