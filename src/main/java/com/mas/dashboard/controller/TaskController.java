@@ -4,9 +4,13 @@ import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
 import com.mas.dashboard.dto.WeeklySummaryDto;
 import com.mas.dashboard.entity.AppUser;
+import com.mas.dashboard.entity.DailyWords;
+import com.mas.dashboard.entity.DailyWordsResponse;
+import com.mas.dashboard.entity.WeeklySummary;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,33 +38,32 @@ public class TaskController {
 
     @PostMapping("/daily-words")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<DailyWordsDto>> saveDailyWords(@RequestBody List<DailyWordsDto> dailyWordsRequestList) {
+    public ResponseEntity<List<DailyWords>> saveDailyWords(@RequestBody List<DailyWordsDto> dailyWordsRequestList) {
         return new ResponseEntity<>(this.taskService.saveDailyWords(dailyWordsRequestList), HttpStatus.CREATED);
     }
 
     @GetMapping("/daily-words")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<DailyWordsDto> getDailyWords(@RequestParam final Long studentId,
-                                                       @RequestParam final Date date) {
-        return new ResponseEntity<>(this.taskService.getDailyWords(studentId, date), HttpStatus.OK);
+    public ResponseEntity<DailyWords> getDailyWords(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date date) {
+        return new ResponseEntity<>(this.taskService.getDailyWords(date), HttpStatus.OK);
     }
 
     @PostMapping("/daily-words-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<DailyWordsResponseDto> saveDailyWordsResponse (@RequestBody final DailyWordsResponseDto dailyWordsResponseDto) {
+    public ResponseEntity<DailyWordsResponse> saveDailyWordsResponse (@RequestBody final DailyWordsResponseDto dailyWordsResponseDto) {
         return new ResponseEntity<>(this.taskService.saveDailyWordsResponse(dailyWordsResponseDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/daily-words-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<DailyWordsResponseDto> getDailyWordsResponse (@RequestParam final Long studentId,
+    public ResponseEntity<DailyWordsResponse> getDailyWordsResponse (@RequestParam final Long studentId,
                                                                         @RequestParam final Long dailyWordsId) {
         return new ResponseEntity<>(this.taskService.getDailyWordsResponse(studentId, dailyWordsId), HttpStatus.OK);
     }
 
     @PutMapping("/daily-words-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<DailyWordsResponseDto> updateDailyWordsResponse (@RequestBody final DailyWordsResponseDto dailyWordsResponseDto) {
+    public ResponseEntity<DailyWordsResponse> updateDailyWordsResponse (@RequestBody final DailyWordsResponseDto dailyWordsResponseDto) {
         return new ResponseEntity<>(this.taskService.updateDailyWordsResponse(dailyWordsResponseDto), HttpStatus.OK);
     }
 
@@ -73,13 +76,13 @@ public class TaskController {
 
     @PostMapping("/weekly-summary")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<WeeklySummaryDto> saveWeeklySummary (@RequestBody final WeeklySummaryDto weeklySummaryDto) {
+    public ResponseEntity<WeeklySummary> saveWeeklySummary (@RequestBody final WeeklySummaryDto weeklySummaryDto) {
         return new ResponseEntity<>(this.taskService.saveWeeklySummary(weeklySummaryDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/weekly-summary")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<WeeklySummaryDto>> getWeeklySummary (@RequestParam final Date date) {
+    public ResponseEntity<List<WeeklySummary>> getWeeklySummary (@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date date) {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(date), HttpStatus.OK);
     }
 }

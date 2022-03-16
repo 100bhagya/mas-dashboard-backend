@@ -2,7 +2,9 @@ package com.mas.dashboard.mapper;
 
 import com.mas.dashboard.dto.WeeklySummaryDto;
 import com.mas.dashboard.entity.WeeklySummary;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -15,6 +17,6 @@ public interface WeeklySummaryMapper {
 
   WeeklySummary toWeeklySummaryEntity (final WeeklySummaryDto weeklySummaryDto);
 
-  List<WeeklySummaryDto> toWeeklySummaryDtoList (final List<WeeklySummary> weeklySummaryList);
+//  List<WeeklySummaryDto> toWeeklySummaryDtoList (final List<WeeklySummary> weeklySummaryList);
 
 }

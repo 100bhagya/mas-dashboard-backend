@@ -8,11 +8,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Data
 @Entity
 @Table(name = "weekly_summary")
 public class WeeklySummary {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String articleTopic;
@@ -40,4 +43,11 @@ public class WeeklySummary {
 
   @LastModifiedBy
   private Long updatedBy;
+
+  @PrePersist
+  public void prePersist () {
+    if (Objects.nonNull(this.deleted)) {
+      this.deleted = false;
+    }
+  }
 }
