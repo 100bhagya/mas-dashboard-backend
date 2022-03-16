@@ -16,6 +16,7 @@ import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -38,51 +39,79 @@ public class TaskServiceImpl implements TaskService {
 
   private static final WeeklySummaryMapper WEEKLY_SUMMARY_MAPPER = WeeklySummaryMapper.INSTANCE;
 
-  public List<DailyWordsDto> saveDailyWords(List<DailyWordsDto> dailyWordsRequestList) {
+  public List<DailyWords> saveDailyWords(List<DailyWordsDto> dailyWordsRequestList) {
     final List<DailyWords> dailyWordsList = new ArrayList<>();
 
     dailyWordsRequestList.forEach(e -> {
-      final Optional<DailyWords> optionalDailyWords = this.dailyWordRepository.findByDate(e.getDate());
+      final Date date;
+      try {
+        date = new SimpleDateFormat("dd-MM-yyyy").parse(e.getDate());
+      } catch (Exception exception) {
+        throw new IllegalArgumentException("Date format error");
+      }
+      final Optional<DailyWords> optionalDailyWords = this.dailyWordRepository.findByDate(date);
       if (optionalDailyWords.isPresent()) {
         throw new IllegalArgumentException("Daily words for the given date already exist");
       }
-      DailyWords dailyWords = DAILY_WORDS_MAPPER.toDailyWordsEntity(e);
+      // Todo: Implement a mapper
+      // DailyWords dailyWords = DAILY_WORDS_MAPPER.toDailyWordsEntity(e);
+      DailyWords dailyWords = new DailyWords();
+      dailyWords.setWordOne(e.getWordOne());;
+      dailyWords.setWordOneCat(e.getWordOneCat());;
+      dailyWords.setWordOneMeaning(e.getWordOneMeaning());
+      dailyWords.setWordTwo(e.getWordTwo());
+      dailyWords.setWordTwoCat(e.getWordTwoCat());
+      dailyWords.setWordTwoMeaning(e.getWordTwoMeaning());
+      dailyWords.setDate(date);
+      dailyWords.setCreatedBy(-1L);
+      dailyWords.setCreatedDate(date);
+      dailyWords.setUpdatedBy(-1L);
+      dailyWords.setUpdatedDate(date);
       dailyWordsList.add(dailyWords);
     });
-
-    this.dailyWordRepository.saveAll(dailyWordsList);
-    return DAILY_WORDS_MAPPER.toDailyWordsDto(dailyWordsList);
+    return this.dailyWordRepository.saveAll(dailyWordsList);
   }
 
-  public DailyWordsDto getDailyWords (final Long studentId, final Date date) {
+  public DailyWords getDailyWords (final Date date) {
     final Optional<DailyWords> optionalDailyWords = this.dailyWordRepository.findByDate(date);
     if (!optionalDailyWords.isPresent()) {
       throw new IllegalArgumentException("Daily words for the given date not found");
     }
-    return DAILY_WORDS_MAPPER.toDailyWordsDto(optionalDailyWords.get());
+    return optionalDailyWords.get();
   }
 
-  public DailyWordsResponseDto saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
-    final DailyWordsResponse dailyWordsResponse = DAILY_WORDS_RESPONSE_MAPPER.toDailyWordsResponseEntity(dailyWordsResponseDto);
+  public DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
+    final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.
+        findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(), dailyWordsResponseDto.getDailyWordsId());
+    if (optionalDailyWordsResponse.isPresent()) {
+      throw new IllegalArgumentException("Daily words response already exists");
+    }
+    final DailyWordsResponse dailyWordsResponse = new DailyWordsResponse();
+    dailyWordsResponse.setDailyWordsId(dailyWordsResponseDto.getDailyWordsId());
+    dailyWordsResponse.setStudentId(dailyWordsResponseDto.getStudentId());
+    dailyWordsResponse.setResponseOne(dailyWordsResponseDto.getResponseOne());
+    dailyWordsResponse.setResponseTwo(dailyWordsResponseDto.getResponseTwo());
+    dailyWordsResponse.setCreatedBy(dailyWordsResponseDto.getStudentId());
+    dailyWordsResponse.setCreatedDate(new Date());
+    dailyWordsResponse.setUpdatedBy(dailyWordsResponseDto.getStudentId());
+    dailyWordsResponse.setUpdatedDate(new Date());
     if (dailyWordsResponseDto.getResponseOne().isEmpty() || dailyWordsResponseDto.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setCompleted(Boolean.FALSE);
     } else {
       dailyWordsResponse.setCompleted(Boolean.TRUE);
     }
-    this.dailyWordsResponseRepository.save(dailyWordsResponse);
-    return DAILY_WORDS_RESPONSE_MAPPER.toDailyWordsResponseDto(dailyWordsResponse);
+    return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
-  public DailyWordsResponseDto getDailyWordsResponse (final Long studentId, final Long dailyWordsId) {
+  public DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordsId) {
     final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(studentId, dailyWordsId);
     if (!optionalDailyWordsResponse.isPresent()) {
       return null;
     }
-    final DailyWordsResponse dailyWordsResponse = optionalDailyWordsResponse.get();
-    return DAILY_WORDS_RESPONSE_MAPPER.toDailyWordsResponseDto(dailyWordsResponse);
+    return optionalDailyWordsResponse.get();
   }
 
-  public DailyWordsResponseDto updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
+  public DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
     final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(),
         dailyWordsResponseDto.getDailyWordsId());
     if (!optionalDailyWordsResponse.isPresent()) {
@@ -98,7 +127,7 @@ public class TaskServiceImpl implements TaskService {
     if (!dailyWordsResponse.getResponseOne().isEmpty() || !dailyWordsResponse.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setCompleted(Boolean.TRUE);
     }
-    return DAILY_WORDS_RESPONSE_MAPPER.toDailyWordsResponseDto(dailyWordsResponse);
+    return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
   public Map<Integer, Boolean> checkDailyWordsCompletedStatus (final Integer month, final Integer year) {
@@ -111,22 +140,29 @@ public class TaskServiceImpl implements TaskService {
     return null;
   }
 
-  public WeeklySummaryDto saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
+  public WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
     final Integer weeklySummaryCountByDate = this.weeklySummaryRepository.findCountByDateAndDeletedFalse(weeklySummaryDto.getDate());
     if (weeklySummaryCountByDate >= 2) {
       throw new IllegalArgumentException("Weekly summary already exists for the given date");
     }
-    this.weeklySummaryRepository.save(WEEKLY_SUMMARY_MAPPER.toWeeklySummaryEntity(weeklySummaryDto));
-    return weeklySummaryDto;
+    final WeeklySummary weeklySummary = new WeeklySummary();
+    weeklySummary.setArticleTopic(weeklySummaryDto.getArticleTopic());
+    weeklySummary.setArticleText(weeklySummaryDto.getArticleText());
+    weeklySummary.setReadTime(weeklySummaryDto.getReadTime());
+    weeklySummary.setDate(weeklySummaryDto.getDate());
+    weeklySummary.setCreatedBy(-1L);
+    weeklySummary.setCreatedDate(new Date());
+    weeklySummary.setUpdatedBy(-1L);
+    weeklySummary.setUpdatedDate(new Date());
+    return this.weeklySummaryRepository.save(weeklySummary);
   }
 
-  public List<WeeklySummaryDto> getWeeklySummary (final Date date) {
+  public List<WeeklySummary> getWeeklySummary (final Date date) {
     final Optional<List<WeeklySummary>> optionalWeeklySummaryDtoList = this.weeklySummaryRepository.
         findAllByDateAndDeletedFalse(date);
     if (!optionalWeeklySummaryDtoList.isPresent()) {
       throw new IllegalArgumentException("Weekly Summary not found for the given date");
     }
-    final List<WeeklySummary> weeklySummaries = optionalWeeklySummaryDtoList.get();
-    return WEEKLY_SUMMARY_MAPPER.toWeeklySummaryDtoList(weeklySummaries);
+    return optionalWeeklySummaryDtoList.get();
   }
 }

@@ -3,6 +3,9 @@ package com.mas.dashboard.service;
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
 import com.mas.dashboard.dto.WeeklySummaryDto;
+import com.mas.dashboard.entity.DailyWords;
+import com.mas.dashboard.entity.DailyWordsResponse;
+import com.mas.dashboard.entity.WeeklySummary;
 
 import java.util.Date;
 import java.util.List;
@@ -10,19 +13,19 @@ import java.util.Map;
 
 public interface TaskService {
 
-  List<DailyWordsDto> saveDailyWords (final List<DailyWordsDto> dailyWordsRequests);
+  List<DailyWords> saveDailyWords (final List<DailyWordsDto> dailyWordsRequests);
 
-  DailyWordsDto getDailyWords (final Long studentId, final Date date);
+  DailyWords getDailyWords (final Date date);
 
-  DailyWordsResponseDto saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
+  DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
-  DailyWordsResponseDto getDailyWordsResponse (final Long studentId, final Long dailyWordId);
+  DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordId);
 
-  DailyWordsResponseDto updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
+  DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
   Map<Integer, Boolean> checkDailyWordsCompletedStatus (final Integer monthName, final Integer year);
 
-  WeeklySummaryDto saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
+  WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 
-  List<WeeklySummaryDto> getWeeklySummary (final Date date);
+  List<WeeklySummary> getWeeklySummary (final Date date);
 }

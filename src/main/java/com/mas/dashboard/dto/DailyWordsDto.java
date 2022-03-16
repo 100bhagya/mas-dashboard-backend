@@ -22,8 +22,8 @@ public class DailyWordsDto {
   private String wordTwoCat;
 
   private String wordTwoMeaning;
-
-  private Date date;
+  
+  private String date;
 
   private Boolean deleted;
 }
