@@ -16,7 +16,7 @@ public class JwtUtils {
 
     private String jwtSecret="qwertypassword";
 
-    private int jwtExpirationMs=86400000;
+    private int jwtExpirationMs=86400;
 
     public String generateJwtToken(Authentication authentication) {
         AppUserDetailsImpl userPrincipal = (AppUserDetailsImpl) authentication.getPrincipal();

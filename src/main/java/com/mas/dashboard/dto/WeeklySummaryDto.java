@@ -14,7 +14,7 @@ public class WeeklySummaryDto {
 
   private Long readTime;
 
-  private Date date;
+  private String date;
 
   private Boolean deleted;
 }

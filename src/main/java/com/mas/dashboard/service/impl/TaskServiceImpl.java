@@ -119,7 +119,7 @@ public class TaskServiceImpl implements TaskService {
     }
     final DailyWordsResponse dailyWordsResponse = optionalDailyWordsResponse.get();
     if (!dailyWordsResponseDto.getResponseOne().isEmpty()) {
-      dailyWordsResponse.setResponseOne(dailyWordsResponse.getResponseOne());
+      dailyWordsResponse.setResponseOne(dailyWordsResponseDto.getResponseOne());
     }
     if (!dailyWordsResponseDto.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setResponseTwo(dailyWordsResponseDto.getResponseTwo());
@@ -141,7 +141,13 @@ public class TaskServiceImpl implements TaskService {
   }
 
   public WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
-    final Integer weeklySummaryCountByDate = this.weeklySummaryRepository.findCountByDateAndDeletedFalse(weeklySummaryDto.getDate());
+    final Date date;
+    try {
+      date = new SimpleDateFormat("dd-MM-yyyy").parse(weeklySummaryDto.getDate());
+    } catch (Exception exception) {
+      throw new IllegalArgumentException("Date format error");
+    }
+    final Integer weeklySummaryCountByDate = this.weeklySummaryRepository.findCountByDateAndDeletedFalse(date);
     if (weeklySummaryCountByDate >= 2) {
       throw new IllegalArgumentException("Weekly summary already exists for the given date");
     }
@@ -149,7 +155,7 @@ public class TaskServiceImpl implements TaskService {
     weeklySummary.setArticleTopic(weeklySummaryDto.getArticleTopic());
     weeklySummary.setArticleText(weeklySummaryDto.getArticleText());
     weeklySummary.setReadTime(weeklySummaryDto.getReadTime());
-    weeklySummary.setDate(weeklySummaryDto.getDate());
+    weeklySummary.setDate(date);
     weeklySummary.setCreatedBy(-1L);
     weeklySummary.setCreatedDate(new Date());
     weeklySummary.setUpdatedBy(-1L);
