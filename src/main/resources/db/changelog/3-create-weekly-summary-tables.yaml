@@ -24,7 +24,7 @@ databaseChangeLog:
                   type: BIGINT
               - column:
                   name: date
-                  type: VARCHAR
+                  type: date
               - column:
                   name: deleted
                   type: BOOLEAN
