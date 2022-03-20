@@ -2,11 +2,9 @@ package com.mas.dashboard.controller;
 
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
+import com.mas.dashboard.dto.TaskRatingDto;
 import com.mas.dashboard.dto.WeeklySummaryDto;
-import com.mas.dashboard.entity.AppUser;
-import com.mas.dashboard.entity.DailyWords;
-import com.mas.dashboard.entity.DailyWordsResponse;
-import com.mas.dashboard.entity.WeeklySummary;
+import com.mas.dashboard.entity.*;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +67,10 @@ public class TaskController {
 
     @GetMapping("/daily-words/check-status")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Map<Integer, Boolean>> checkDailyWordsCompletedStatus (@RequestParam final Integer monthName,
-                                                                                 @RequestParam final Integer year) {
-        return new ResponseEntity<>(this.taskService.checkDailyWordsCompletedStatus(monthName, year), HttpStatus.OK);
+    public ResponseEntity<Map<Date, Boolean>> checkDailyWordsCompletedStatus (@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date fromDate,
+                                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date toDate,
+                                                                                 @RequestParam final Long studentId) {
+        return new ResponseEntity<>(this.taskService.checkDailyWordsCompletedStatus(fromDate, toDate, studentId), HttpStatus.OK);
     }
 
     @PostMapping("/weekly-summary")
@@ -84,5 +83,23 @@ public class TaskController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<WeeklySummary>> getWeeklySummary (@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date date) {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(date), HttpStatus.OK);
+    }
+
+    @PostMapping("task-rating")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<TaskRating> createTaskRating (@RequestBody final TaskRatingDto taskRatingDto) {
+        return new ResponseEntity<>(this.taskService.createTaskRating(taskRatingDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("task-rating")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<TaskRating>> getTaskRating (@RequestParam final Long studentId, @RequestParam final String category) {
+        return new ResponseEntity<>(this.taskService.getAllTaskRating(studentId, category), HttpStatus.OK);
+    }
+
+    @PutMapping("task-rating")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<TaskRating> updateTaskRating (@RequestBody final TaskRatingDto taskRatingDto) {
+        return new ResponseEntity<>(this.taskService.updateTaskRating(taskRatingDto), HttpStatus.OK);
     }
 }
