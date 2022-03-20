@@ -2,23 +2,25 @@ package com.mas.dashboard.service.impl;
 
 import com.mas.dashboard.dto.DailyWordsDto;
 import com.mas.dashboard.dto.DailyWordsResponseDto;
+import com.mas.dashboard.dto.TaskRatingDto;
 import com.mas.dashboard.dto.WeeklySummaryDto;
 import com.mas.dashboard.entity.DailyWords;
 import com.mas.dashboard.entity.DailyWordsResponse;
+import com.mas.dashboard.entity.TaskRating;
 import com.mas.dashboard.entity.WeeklySummary;
 import com.mas.dashboard.mapper.DailyWordsMapper;
 import com.mas.dashboard.mapper.DailyWordsResponseMapper;
 import com.mas.dashboard.mapper.WeeklySummaryMapper;
 import com.mas.dashboard.repository.DailyWordRepository;
 import com.mas.dashboard.repository.DailyWordsResponseRepository;
+import com.mas.dashboard.repository.TaskRatingRepository;
 import com.mas.dashboard.repository.WeeklySummaryRepository;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Tuple;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -33,11 +35,16 @@ public class TaskServiceImpl implements TaskService {
   @Autowired
   private WeeklySummaryRepository weeklySummaryRepository;
 
+  @Autowired
+  private TaskRatingRepository taskRatingRepository;
+
   private static final DailyWordsMapper DAILY_WORDS_MAPPER = DailyWordsMapper.INSTANCE;
 
   private static final DailyWordsResponseMapper DAILY_WORDS_RESPONSE_MAPPER = DailyWordsResponseMapper.INSTANCE;
 
   private static final WeeklySummaryMapper WEEKLY_SUMMARY_MAPPER = WeeklySummaryMapper.INSTANCE;
+
+  String GD = "GD";
 
   public List<DailyWords> saveDailyWords(List<DailyWordsDto> dailyWordsRequestList) {
     final List<DailyWords> dailyWordsList = new ArrayList<>();
@@ -130,14 +137,13 @@ public class TaskServiceImpl implements TaskService {
     return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
-  public Map<Integer, Boolean> checkDailyWordsCompletedStatus (final Integer month, final Integer year) {
-    final Date date = new Date();
-    LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    int todayMonth = localDate.getMonthValue();
-    int todayYear = localDate.getYear();
-    int todayDay = localDate.getDayOfMonth();
-    // TODO: Write logic for this method
-    return null;
+  public Map<Date, Boolean> checkDailyWordsCompletedStatus (final Date fromDate, final Date toDate, final Long studentId) {
+    final List<Tuple> tuples = this.dailyWordsResponseRepository.checkCompletedStatusByStudentIdAndDate(fromDate, toDate, studentId);
+    Map<Date, Boolean> dateCompletedStatusMap = new HashMap<>();
+    tuples.forEach(tuple -> {
+      dateCompletedStatusMap.put((Date) tuple.get("date"), (Boolean) tuple.get("completed"));
+    });
+    return dateCompletedStatusMap;
   }
 
   public WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
@@ -170,5 +176,36 @@ public class TaskServiceImpl implements TaskService {
       throw new IllegalArgumentException("Weekly Summary not found for the given date");
     }
     return optionalWeeklySummaryDtoList.get();
+  }
+
+  public TaskRating createTaskRating (final TaskRatingDto taskRatingDto) {
+    final Optional<TaskRating> optionalTaskRating = this.taskRatingRepository.
+        findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
+            taskRatingDto.getCategory(), taskRatingDto.getChapter());
+    if (!optionalTaskRating.isPresent()) {
+      throw new IllegalArgumentException("Task rating already exists for the given student id, category and chapter");
+    }
+    return this.taskRatingRepository.save(optionalTaskRating.get());
+  }
+
+  public List<TaskRating> getAllTaskRating (final Long studentId, final String category) {
+    // TODO: Make category an enum
+    List<TaskRating> taskRatingList = this.taskRatingRepository.findAllByStudentIdAndCategory(studentId, category);
+    if (taskRatingList.size() == 0) {
+      throw new IllegalArgumentException("Task rating not found for the given student id and category");
+    }
+    return taskRatingList;
+  }
+
+  public TaskRating updateTaskRating (final TaskRatingDto taskRatingDto) {
+    final Optional<TaskRating> optionalTaskRating = this.taskRatingRepository.
+        findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
+            taskRatingDto.getCategory(), taskRatingDto.getChapter());
+    if (!optionalTaskRating.isPresent()) {
+      throw new IllegalArgumentException("Task rating not found for the given student id, category and chapter");
+    }
+    final TaskRating taskRating = optionalTaskRating.get();
+    taskRating.setRating(taskRatingDto.getRating());
+    return taskRating;
   }
 }
