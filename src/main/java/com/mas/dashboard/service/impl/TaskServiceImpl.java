@@ -182,10 +182,20 @@ public class TaskServiceImpl implements TaskService {
     final Optional<TaskRating> optionalTaskRating = this.taskRatingRepository.
         findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
             taskRatingDto.getCategory(), taskRatingDto.getChapter());
-    if (!optionalTaskRating.isPresent()) {
+    if (optionalTaskRating.isPresent()) {
       throw new IllegalArgumentException("Task rating already exists for the given student id, category and chapter");
     }
-    return this.taskRatingRepository.save(optionalTaskRating.get());
+    TaskRating taskRating = new TaskRating();
+    taskRating.setCategory(taskRatingDto.getCategory());
+    taskRating.setChapter(taskRatingDto.getChapter());;
+    taskRating.setStudentId(taskRatingDto.getStudentId());
+    taskRating.setRating(taskRatingDto.getRating());
+    taskRating.setDeleted(taskRatingDto.getDeleted());
+    taskRating.setCreatedBy(taskRatingDto.getStudentId());
+    taskRating.setCreatedDate(new Date());
+    taskRating.setUpdatedBy(taskRatingDto.getStudentId());
+    taskRating.setUpdatedDate(new Date());
+    return this.taskRatingRepository.save(taskRating);
   }
 
   public List<TaskRating> getAllTaskRating (final Long studentId, final String category) {
@@ -206,6 +216,6 @@ public class TaskServiceImpl implements TaskService {
     }
     final TaskRating taskRating = optionalTaskRating.get();
     taskRating.setRating(taskRatingDto.getRating());
-    return taskRating;
+    return this.taskRatingRepository.save(taskRating);
   }
 }
