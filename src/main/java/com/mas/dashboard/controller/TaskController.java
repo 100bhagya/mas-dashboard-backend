@@ -1,9 +1,6 @@
 package com.mas.dashboard.controller;
 
-import com.mas.dashboard.dto.DailyWordsDto;
-import com.mas.dashboard.dto.DailyWordsResponseDto;
-import com.mas.dashboard.dto.TaskRatingDto;
-import com.mas.dashboard.dto.WeeklySummaryDto;
+import com.mas.dashboard.dto.*;
 import com.mas.dashboard.entity.*;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.service.TaskService;
@@ -14,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -101,5 +99,11 @@ public class TaskController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<TaskRating> updateTaskRating (@RequestBody final TaskRatingDto taskRatingDto) {
         return new ResponseEntity<>(this.taskService.updateTaskRating(taskRatingDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/weekly-summary-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<WeeklySummaryResponse> saveWeeklySummaryResponse (@RequestBody final WeeklySummaryResponseDto weeklySummaryResponseDto) throws IOException {
+        return new ResponseEntity<>(this.taskService.saveWeeklySummaryResponse(weeklySummaryResponseDto), HttpStatus.OK);
     }
 }

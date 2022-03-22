@@ -1,14 +1,10 @@
 package com.mas.dashboard.service;
 
-import com.mas.dashboard.dto.DailyWordsDto;
-import com.mas.dashboard.dto.DailyWordsResponseDto;
-import com.mas.dashboard.dto.TaskRatingDto;
-import com.mas.dashboard.dto.WeeklySummaryDto;
-import com.mas.dashboard.entity.DailyWords;
-import com.mas.dashboard.entity.DailyWordsResponse;
-import com.mas.dashboard.entity.TaskRating;
-import com.mas.dashboard.entity.WeeklySummary;
+import com.mas.dashboard.dto.*;
+import com.mas.dashboard.entity.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,4 +32,7 @@ public interface TaskService {
   List<TaskRating> getAllTaskRating (final Long studentId, final String category);
 
   TaskRating updateTaskRating (final TaskRatingDto taskRatingDto);
+
+  WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto file) throws IOException;
+
 }

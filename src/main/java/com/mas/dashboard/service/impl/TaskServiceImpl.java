@@ -1,25 +1,19 @@
 package com.mas.dashboard.service.impl;
 
-import com.mas.dashboard.dto.DailyWordsDto;
-import com.mas.dashboard.dto.DailyWordsResponseDto;
-import com.mas.dashboard.dto.TaskRatingDto;
-import com.mas.dashboard.dto.WeeklySummaryDto;
-import com.mas.dashboard.entity.DailyWords;
-import com.mas.dashboard.entity.DailyWordsResponse;
-import com.mas.dashboard.entity.TaskRating;
-import com.mas.dashboard.entity.WeeklySummary;
+import com.mas.dashboard.dto.*;
+import com.mas.dashboard.entity.*;
 import com.mas.dashboard.mapper.DailyWordsMapper;
 import com.mas.dashboard.mapper.DailyWordsResponseMapper;
 import com.mas.dashboard.mapper.WeeklySummaryMapper;
-import com.mas.dashboard.repository.DailyWordRepository;
-import com.mas.dashboard.repository.DailyWordsResponseRepository;
-import com.mas.dashboard.repository.TaskRatingRepository;
-import com.mas.dashboard.repository.WeeklySummaryRepository;
+import com.mas.dashboard.repository.*;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Tuple;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -36,7 +30,11 @@ public class TaskServiceImpl implements TaskService {
   private WeeklySummaryRepository weeklySummaryRepository;
 
   @Autowired
+  private WeeklySummaryResponseRepository weeklySummaryResponseRepository;
+
+  @Autowired
   private TaskRatingRepository taskRatingRepository;
+
 
   private static final DailyWordsMapper DAILY_WORDS_MAPPER = DailyWordsMapper.INSTANCE;
 
@@ -217,5 +215,27 @@ public class TaskServiceImpl implements TaskService {
     final TaskRating taskRating = optionalTaskRating.get();
     taskRating.setRating(taskRatingDto.getRating());
     return this.taskRatingRepository.save(taskRating);
+  }
+
+
+  @Override
+  public WeeklySummaryResponse saveWeeklySummaryResponse(WeeklySummaryResponseDto file) throws IOException {
+    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.getFile(file.getName());
+    if(optionalWeeklySummaryResponse.isPresent()) {
+      throw new IllegalArgumentException("File Already Uploaded");
+    }
+    WeeklySummaryResponse weeklySummaryResponse = new WeeklySummaryResponse();
+    weeklySummaryResponse.setId(file.getArticleId());
+    weeklySummaryResponse.setSummaryResponse(file.getBytes());
+    weeklySummaryResponse.setCompleted(file.getCompleted());
+    weeklySummaryResponse.setCreatedBy(-1L);
+    weeklySummaryResponse.setCreatedDate(new Date());
+    weeklySummaryResponse.setUpdatedBy(-1L);
+    weeklySummaryResponse.setUpdatedDate(new Date());
+
+    //todo : implement the return statement
+//    return this.weeklySummaryResponseRepository.save(weeklySummaryResponse);
+
+    return null;
   }
 }
