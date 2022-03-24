@@ -3,3 +3,7 @@ databaseChangeLog:
       file: classpath:db/changelog/1-create-user-tables.yaml
   - include:
       file: classpath:db/changelog/2-create-daily-words-tables.yaml
+  - include:
+      file: classpath:db/changelog/3-create-weekly-summary-tables.yaml
+  - include:
+      file: classpath:db/changelog/4-create-ratings-table.yaml
