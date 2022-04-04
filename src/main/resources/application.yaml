@@ -8,10 +8,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/dashboard_db
     username: postgres
     password: postgres.123
+    initialization-mode: always
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
