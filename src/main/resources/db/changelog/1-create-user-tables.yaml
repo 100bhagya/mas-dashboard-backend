@@ -53,4 +53,3 @@ databaseChangeLog:
                   name: name
                   type: VARCHAR
             tableName: role
-
