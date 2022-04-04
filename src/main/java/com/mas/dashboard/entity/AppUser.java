@@ -1,24 +1,25 @@
 package com.mas.dashboard.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "app_user",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
-        })
+@Table(name = "app_user")
+@Data
 public class AppUser {
 
   @Id
@@ -46,11 +47,34 @@ public class AppUser {
 
   private Boolean deleted;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(	name = "user_roles",
-          joinColumns = @JoinColumn(name = "user_id"),
-          inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<Role> roles = new HashSet<>();
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false, updatable = false)
+  @CreatedDate
+  private Date createdDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
+  @LastModifiedDate
+  private Date updatedDate;
+
+  @CreatedBy
+  private Long createdBy;
+
+  @LastModifiedBy
+  private Long updatedBy;
+
+  @PrePersist
+  public void prePersist() {
+    if (Objects.isNull(this.deleted)) {
+      this.deleted = Boolean.FALSE;
+    }
+  }
+
+  @ManyToMany
+  @JoinTable(name = "app_user_roles",
+      joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
+  private Set<Role> roles;
 
   public AppUser() {
   }
@@ -63,60 +87,4 @@ public class AppUser {
     this.password = password;
     this.deleted = deleted;
   }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public String getLastName() { return lastName; }
-
-  public void setLastName(String lastName) { this.lastName = lastName; }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
-  }
-
-  public Boolean getDeleted() { return deleted; }
-
-  public void setDeleted(Boolean deleted) {this.deleted = deleted; }
 }

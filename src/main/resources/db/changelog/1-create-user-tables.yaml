@@ -31,10 +31,50 @@ databaseChangeLog:
               - column:
                   name: deleted
                   type: BOOLEAN
+              - column:
+                  name: role_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
+                  name: created_date
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP WITH TIME ZONE
             tableName: app_user
 
   - changeSet:
       id: SG2
+      author: Saubhagya
+      comment: Add unique constraint for email in app user table
+      changes:
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: email_unique
+            tableName: app_user
+
+  - changeSet:
+      id: SG3
+      author: Saubhagya
+      comment: Add unique constraint for username in app user table
+      changes:
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: username_unique
+            tableName: app_user
+
+  - changeSet:
+      id: SG4
       author: Saubhagya
       comment: Create role table
       changes:
@@ -54,3 +94,19 @@ databaseChangeLog:
                   type: VARCHAR
             tableName: role
 
+  - changeSet:
+      id: SG5
+      author: Saubhagya
+      comment: Create app user and role table relation
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: app_user
+            constraintName: app_user_role_fk
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: role
+            validate: true

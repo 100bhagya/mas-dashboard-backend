@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "role")
@@ -15,6 +16,9 @@ public class Role {
 
   @Enumerated(EnumType.STRING)
   private ERole name;
+
+  @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+  private List<AppUser> users;
 
   public Role() {
   }
