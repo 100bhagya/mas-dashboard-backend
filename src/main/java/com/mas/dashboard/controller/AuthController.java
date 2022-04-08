@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,15 +94,26 @@ public class AuthController {
                 signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()),
-                signUpRequest.getDeleted());
+                Boolean.FALSE);
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
+        final List<String> allowedEmails = new ArrayList<>();
+
+        allowedEmails.add("user1@mas.com");
+        allowedEmails.add("user2@mas.com");
+        allowedEmails.add("user3@mas.com");
+        allowedEmails.add("user4@mas.com");
+        allowedEmails.add("user5@mas.com");
+        allowedEmails.add("user6@mas.com");
+        allowedEmails.add("user7@mas.com");
+        allowedEmails.add("saubhagya.gaurav.che16@itbhu.ac.in");
+        allowedEmails.add("sahupawan9749568594@gmail.com");
+        allowedEmails.add("tusharnath10@gmail.com");
+
         if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
+            throw new RuntimeException("Error: Role is not found.");
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
@@ -117,10 +129,17 @@ public class AuthController {
                         roles.add(modRole);
 
                         break;
-                    default:
+                    case "user":
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
+                        if(allowedEmails.contains(signUpRequest.getEmail())) {
+                            roles.add(userRole);
+                        } else {
+                            throw new RuntimeException("Email not found in list!");
+                        }
+                        break;
+                    default :
+                        throw new RuntimeException("Invalid Role!");
                 }
             });
         }
