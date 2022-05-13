@@ -14,9 +14,6 @@ import java.util.Optional;
 @Repository
 public interface WeeklySummaryRepository extends JpaRepository<WeeklySummary, Long> {
 
-  @Query(nativeQuery = true, value = "select count(id) from weekly_summary where date = :date and deleted = false")
-  Integer findCountByDateAndDeletedFalse (@Param("date") final Date date);
+  Optional<WeeklySummary> findByWeekNumberAndArticleNumberAndDeletedFalse (final Integer weekNumber, final Integer articleNumber);
 
-  @Query(nativeQuery = true, value = "select * from weekly_summary where date = :date")
-  Optional<List<WeeklySummary>> findAllByDateAndDeletedFalse(@RequestParam("date") final Date date);
 }
