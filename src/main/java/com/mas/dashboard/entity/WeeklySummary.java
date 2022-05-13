@@ -24,7 +24,9 @@ public class WeeklySummary {
 
   private Long readTime;
 
-  private Date date;
+  private Integer weekNumber;
+
+  private Integer articleNumber;
 
   private Boolean deleted;
 

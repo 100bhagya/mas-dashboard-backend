@@ -8,9 +8,6 @@ import com.mas.dashboard.entity.DailyWords;
 import com.mas.dashboard.entity.DailyWordsResponse;
 import com.mas.dashboard.entity.TaskRating;
 import com.mas.dashboard.entity.WeeklySummary;
-import com.mas.dashboard.mapper.DailyWordsMapper;
-import com.mas.dashboard.mapper.DailyWordsResponseMapper;
-import com.mas.dashboard.mapper.WeeklySummaryMapper;
 import com.mas.dashboard.repository.DailyWordRepository;
 import com.mas.dashboard.repository.DailyWordsResponseRepository;
 import com.mas.dashboard.repository.TaskRatingRepository;
@@ -37,12 +34,6 @@ public class TaskServiceImpl implements TaskService {
 
   @Autowired
   private TaskRatingRepository taskRatingRepository;
-
-  private static final DailyWordsMapper DAILY_WORDS_MAPPER = DailyWordsMapper.INSTANCE;
-
-  private static final DailyWordsResponseMapper DAILY_WORDS_RESPONSE_MAPPER = DailyWordsResponseMapper.INSTANCE;
-
-  private static final WeeklySummaryMapper WEEKLY_SUMMARY_MAPPER = WeeklySummaryMapper.INSTANCE;
 
   String GD = "GD";
 
@@ -147,21 +138,17 @@ public class TaskServiceImpl implements TaskService {
   }
 
   public WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
-    final Date date;
-    try {
-      date = new SimpleDateFormat("dd-MM-yyyy").parse(weeklySummaryDto.getDate());
-    } catch (Exception exception) {
-      throw new IllegalArgumentException("Date format error");
-    }
-    final Integer weeklySummaryCountByDate = this.weeklySummaryRepository.findCountByDateAndDeletedFalse(date);
-    if (weeklySummaryCountByDate >= 2) {
-      throw new IllegalArgumentException("Weekly summary already exists for the given date");
+    final Optional<WeeklySummary> optionalWeeklySummary = this.weeklySummaryRepository.
+            findByWeekNumberAndArticleNumberAndDeletedFalse(weeklySummaryDto.getWeekNumber(), weeklySummaryDto.getArticleNumber());
+    if (optionalWeeklySummary.isPresent() ) {
+      throw new IllegalArgumentException("Weekly summary already exists for the given week");
     }
     final WeeklySummary weeklySummary = new WeeklySummary();
     weeklySummary.setArticleTopic(weeklySummaryDto.getArticleTopic());
     weeklySummary.setArticleText(weeklySummaryDto.getArticleText());
     weeklySummary.setReadTime(weeklySummaryDto.getReadTime());
-    weeklySummary.setDate(date);
+    weeklySummary.setWeekNumber(weeklySummary.getWeekNumber());
+    weeklySummary.setArticleNumber(weeklySummary.getArticleNumber());
     weeklySummary.setCreatedBy(-1L);
     weeklySummary.setCreatedDate(new Date());
     weeklySummary.setUpdatedBy(-1L);
@@ -169,13 +156,13 @@ public class TaskServiceImpl implements TaskService {
     return this.weeklySummaryRepository.save(weeklySummary);
   }
 
-  public List<WeeklySummary> getWeeklySummary (final Date date) {
-    final Optional<List<WeeklySummary>> optionalWeeklySummaryDtoList = this.weeklySummaryRepository.
-        findAllByDateAndDeletedFalse(date);
-    if (!optionalWeeklySummaryDtoList.isPresent()) {
-      throw new IllegalArgumentException("Weekly Summary not found for the given date");
+  public WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber) {
+    final Optional<WeeklySummary> optionalWeeklySummary = this.weeklySummaryRepository.
+        findByWeekNumberAndArticleNumberAndDeletedFalse(weekNumber, articleNumber);
+    if (!optionalWeeklySummary.isPresent()) {
+      throw new IllegalArgumentException("Weekly Summary not found for the given week and article number");
     }
-    return optionalWeeklySummaryDtoList.get();
+    return optionalWeeklySummary.get();
   }
 
   public TaskRating createTaskRating (final TaskRatingDto taskRatingDto) {

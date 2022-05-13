@@ -23,11 +23,14 @@ databaseChangeLog:
                   name: read_time
                   type: BIGINT
               - column:
-                  name: date
-                  type: date
-              - column:
                   name: deleted
                   type: BOOLEAN
+              - column:
+                  name: week_number
+                  type: INTEGER
+              - column:
+                  name: article_number
+                  type: INTEGER
               - column:
                   constraints:
                     nullable: false
@@ -47,4 +50,3 @@ databaseChangeLog:
                   type: TIMESTAMP WITH TIME ZONE
             remarks: This table stores weekly summary
             tableName: weekly_summary
-

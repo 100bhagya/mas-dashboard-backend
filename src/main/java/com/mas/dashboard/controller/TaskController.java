@@ -81,8 +81,8 @@ public class TaskController {
 
     @GetMapping("/weekly-summary")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<WeeklySummary>> getWeeklySummary (@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date date) {
-        return new ResponseEntity<>(this.taskService.getWeeklySummary(date), HttpStatus.OK);
+    public ResponseEntity<WeeklySummary> getWeeklySummary (@RequestParam final Integer weekNumber, @RequestParam final Integer articleNumber) {
+        return new ResponseEntity<>(this.taskService.getWeeklySummary(weekNumber, articleNumber), HttpStatus.OK);
     }
 
     @PostMapping("task-rating")

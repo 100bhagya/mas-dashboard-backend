@@ -29,7 +29,7 @@ public interface TaskService {
 
   WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 
-  List<WeeklySummary> getWeeklySummary (final Date date);
+  WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber);
 
   TaskRating createTaskRating (final TaskRatingDto taskRatingDto);
 
