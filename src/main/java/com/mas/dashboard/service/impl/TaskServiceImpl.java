@@ -147,8 +147,8 @@ public class TaskServiceImpl implements TaskService {
     weeklySummary.setArticleTopic(weeklySummaryDto.getArticleTopic());
     weeklySummary.setArticleText(weeklySummaryDto.getArticleText());
     weeklySummary.setReadTime(weeklySummaryDto.getReadTime());
-    weeklySummary.setWeekNumber(weeklySummary.getWeekNumber());
-    weeklySummary.setArticleNumber(weeklySummary.getArticleNumber());
+    weeklySummary.setWeekNumber(weeklySummaryDto.getWeekNumber());
+    weeklySummary.setArticleNumber(weeklySummaryDto.getArticleNumber());
     weeklySummary.setCreatedBy(-1L);
     weeklySummary.setCreatedDate(new Date());
     weeklySummary.setUpdatedBy(-1L);
