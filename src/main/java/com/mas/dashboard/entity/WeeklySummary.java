@@ -48,8 +48,6 @@ public class WeeklySummary {
 
   @PrePersist
   public void prePersist () {
-    if (Objects.nonNull(this.deleted)) {
-      this.deleted = false;
-    }
+    this.deleted = false;
   }
 }
