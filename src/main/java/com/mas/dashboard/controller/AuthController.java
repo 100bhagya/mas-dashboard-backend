@@ -101,6 +101,7 @@ public class AuthController {
 
         final List<String> allowedEmails = new ArrayList<>();
 
+        allowedEmails.add("hi@ajaysharma.dev");
         allowedEmails.add("user1@mas.com");
         allowedEmails.add("user2@mas.com");
         allowedEmails.add("user3@mas.com");
