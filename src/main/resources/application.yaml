@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/dashboard_db
     username: postgres
-    password: postgres.123
+    password: test123
     initialization-mode: always
   jpa:
     show-sql: true
