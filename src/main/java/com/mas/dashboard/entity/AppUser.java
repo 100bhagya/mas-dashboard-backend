@@ -3,7 +3,10 @@ package com.mas.dashboard.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -44,9 +47,20 @@ public class AppUser {
   private Boolean deleted;
 
   @Temporal(TemporalType.TIMESTAMP)
-  @Column
+  @Column(nullable = false, updatable = false)
   @CreatedDate
   private Date createdDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
+  @LastModifiedDate
+  private Date updatedDate;
+
+  @CreatedBy
+  private Long createdBy;
+
+  @LastModifiedBy
+  private Long updatedBy;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(	name = "user_roles",
@@ -123,4 +137,10 @@ public class AppUser {
   public void setDeleted(Boolean deleted) {this.deleted = deleted; }
 
   public void setCreatedDate(Date createdDate) {this.createdDate = createdDate; }
+
+  public void setUpdatedDate(Date updatedDate) {this.updatedDate = updatedDate; }
+
+  public void setCreatedBy(Long createdBy) {this.createdBy = createdBy; }
+
+  public void setUpdatedBy(Long updatedBy) {this.updatedBy = updatedBy; }
 }

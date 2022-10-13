@@ -145,6 +145,10 @@ public class AuthController {
 
         user.setRoles(roles);
         user.setCreatedDate(new Date());
+        user.setUpdatedDate(new Date());
+        user.setCreatedBy(-1L);
+        user.setUpdatedBy(-1L);
+
 
         //save the user
         appUserRepository.save(user);
