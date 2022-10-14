@@ -124,6 +124,7 @@ public class TaskServiceImpl implements TaskService {
     }
     if (!dailyWordsResponse.getResponseOne().isEmpty() || !dailyWordsResponse.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setCompleted(Boolean.TRUE);
+      dailyWordsResponse.setUpdatedDate(new Date());
     }
     return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
