@@ -31,6 +31,23 @@ databaseChangeLog:
               - column:
                   name: deleted
                   type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
+                  name: created_date
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP WITH TIME ZONE
             tableName: app_user
 
   - changeSet:

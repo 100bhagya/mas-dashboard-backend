@@ -12,7 +12,7 @@ public class TaskRatingDto {
 
   private Long studentId;
 
-  private Long rating;
+  private float rating;
 
   private Boolean deleted;
 }

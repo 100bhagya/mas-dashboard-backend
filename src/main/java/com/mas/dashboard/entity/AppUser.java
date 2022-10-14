@@ -3,20 +3,20 @@ package com.mas.dashboard.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "app_user",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
 public class AppUser {
@@ -45,6 +45,22 @@ public class AppUser {
   private String password;
 
   private Boolean deleted;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false, updatable = false)
+  @CreatedDate
+  private Date createdDate;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
+  @LastModifiedDate
+  private Date updatedDate;
+
+  @CreatedBy
+  private Long createdBy;
+
+  @LastModifiedBy
+  private Long updatedBy;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(	name = "user_roles",
@@ -119,4 +135,12 @@ public class AppUser {
   public Boolean getDeleted() { return deleted; }
 
   public void setDeleted(Boolean deleted) {this.deleted = deleted; }
+
+  public void setCreatedDate(Date createdDate) {this.createdDate = createdDate; }
+
+  public void setUpdatedDate(Date updatedDate) {this.updatedDate = updatedDate; }
+
+  public void setCreatedBy(Long createdBy) {this.createdBy = createdBy; }
+
+  public void setUpdatedBy(Long updatedBy) {this.updatedBy = updatedBy; }
 }

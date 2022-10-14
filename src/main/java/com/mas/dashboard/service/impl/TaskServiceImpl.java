@@ -62,9 +62,9 @@ public class TaskServiceImpl implements TaskService {
       dailyWords.setWordTwoMeaning(e.getWordTwoMeaning());
       dailyWords.setDate(date);
       dailyWords.setCreatedBy(-1L);
-      dailyWords.setCreatedDate(date);
+      dailyWords.setCreatedDate(new Date());
       dailyWords.setUpdatedBy(-1L);
-      dailyWords.setUpdatedDate(date);
+      dailyWords.setUpdatedDate(new Date());
       dailyWordsList.add(dailyWords);
     });
     return this.dailyWordRepository.saveAll(dailyWordsList);
@@ -124,6 +124,7 @@ public class TaskServiceImpl implements TaskService {
     }
     if (!dailyWordsResponse.getResponseOne().isEmpty() || !dailyWordsResponse.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setCompleted(Boolean.TRUE);
+      dailyWordsResponse.setUpdatedDate(new Date());
     }
     return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }

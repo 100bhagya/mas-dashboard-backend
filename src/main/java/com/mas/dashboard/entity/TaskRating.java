@@ -24,7 +24,7 @@ public class TaskRating {
 
   private Long studentId;
 
-  private Long rating;
+  private float rating;
 
   private Boolean deleted;
 
