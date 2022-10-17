@@ -138,6 +138,14 @@ public class TaskServiceImpl implements TaskService {
     return dateCompletedStatusMap;
   }
 
+  public List<DailyWords> getMonthlyWords (final Date startDate, final Date endDate) {
+    final List<DailyWords> tuples = this.dailyWordRepository.findByDateBetween(startDate, endDate);
+    if (tuples.isEmpty()) {
+      throw new IllegalArgumentException("Daily words for the given month not found");
+    }
+    return tuples;
+  }
+
   public WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {
     final Optional<WeeklySummary> optionalWeeklySummary = this.weeklySummaryRepository.
             findByWeekNumberAndArticleNumberAndDeletedFalse(weeklySummaryDto.getWeekNumber(), weeklySummaryDto.getArticleNumber());

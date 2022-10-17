@@ -12,12 +12,15 @@ import com.mas.dashboard.entity.WeeklySummary;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface TaskService {
 
   List<DailyWords> saveDailyWords (final List<DailyWordsDto> dailyWordsRequests);
 
   DailyWords getDailyWords (final Date date);
+
+  List<DailyWords> getMonthlyWords (final Date startDate, final Date endDate);
 
   DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 

@@ -46,6 +46,7 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.getDailyWords(date), HttpStatus.OK);
     }
 
+
     @PostMapping("/daily-words-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<DailyWordsResponse> saveDailyWordsResponse (@RequestBody final DailyWordsResponseDto dailyWordsResponseDto) {
@@ -71,6 +72,13 @@ public class TaskController {
                                                                                  @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date toDate,
                                                                                  @RequestParam final Long studentId) {
         return new ResponseEntity<>(this.taskService.checkDailyWordsCompletedStatus(fromDate, toDate, studentId), HttpStatus.OK);
+    }
+
+    @GetMapping("/monthly-words")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<DailyWords>> getMonthlyWords(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date startDate ,
+                                                            @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date endDate) {
+        return new ResponseEntity<>(this.taskService.getMonthlyWords(startDate, endDate), HttpStatus.OK);
     }
 
     @PostMapping("/weekly-summary")
