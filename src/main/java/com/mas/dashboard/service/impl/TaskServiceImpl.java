@@ -13,6 +13,7 @@ import com.mas.dashboard.repository.DailyWordsResponseRepository;
 import com.mas.dashboard.repository.TaskRatingRepository;
 import com.mas.dashboard.repository.WeeklySummaryRepository;
 import com.mas.dashboard.service.TaskService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -138,12 +139,36 @@ public class TaskServiceImpl implements TaskService {
     return dateCompletedStatusMap;
   }
 
+  //    Date -> {partialComplete, completed}
+  //    {false, false} -> No Response, {true, false} -> One Response only, {true, true} -> Both response
+  public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate, final Long studentId) {
+    final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(fromDate, toDate);
+
+    Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>();
+    DailyWordTuples.forEach(tuple -> {
+      final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(studentId, tuple.getId());
+      if(optionalDailyWordsResponse.isPresent()){
+        List<Boolean> al = new ArrayList<>();
+        al.add(true);
+        al.add(optionalDailyWordsResponse.get().getCompleted());
+        dateCompletedStatusMap.put(tuple.getDate(), al);
+      }else{
+        List<Boolean> al = new ArrayList<>();
+        al.add(false);
+        al.add(false);
+        dateCompletedStatusMap.put(tuple.getDate(), al);
+      }
+
+    });
+    return dateCompletedStatusMap;
+  }
+
   public List<DailyWords> getMonthlyWords (final Date startDate, final Date endDate) {
-    final List<DailyWords> tuples = this.dailyWordRepository.findByDateBetween(startDate, endDate);
-    if (tuples.isEmpty()) {
+    final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(startDate, endDate);
+    if (DailyWordTuples.isEmpty()) {
       throw new IllegalArgumentException("Daily words for the given month not found");
     }
-    return tuples;
+    return DailyWordTuples;
   }
 
   public WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto) {

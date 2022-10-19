@@ -28,7 +28,7 @@ public interface TaskService {
 
   DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
-  Map<Date, Boolean> checkDailyWordsCompletedStatus (final Date fromDate, final Date toDate, final Long studentId);
+  Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate, final Long studentId);
 
   WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 

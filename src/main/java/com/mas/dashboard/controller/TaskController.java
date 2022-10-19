@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -53,7 +54,7 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.saveDailyWordsResponse(dailyWordsResponseDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/daily-words-response")
+    @GetMapping("/daily-words-response-admin")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<DailyWordsResponse> getDailyWordsResponse (@RequestParam final Long studentId,
                                                                         @RequestParam final Long dailyWordsId) {
@@ -68,10 +69,10 @@ public class TaskController {
 
     @GetMapping("/daily-words/check-status")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Map<Date, Boolean>> checkDailyWordsCompletedStatus (@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date fromDate,
-                                                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date toDate,
-                                                                                 @RequestParam final Long studentId) {
-        return new ResponseEntity<>(this.taskService.checkDailyWordsCompletedStatus(fromDate, toDate, studentId), HttpStatus.OK);
+    public ResponseEntity<Map<Date, List<Boolean>>> checkDailyWordsResponseStatus (@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date fromDate,
+                                                                                                         @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy") final Date toDate,
+                                                                                                         @RequestParam final Long studentId) {
+        return new ResponseEntity<>(this.taskService.checkDailyWordsResponseStatus(fromDate, toDate, studentId), HttpStatus.OK);
     }
 
     @GetMapping("/monthly-words")
