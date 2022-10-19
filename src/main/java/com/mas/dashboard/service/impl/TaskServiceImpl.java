@@ -151,12 +151,22 @@ public class TaskServiceImpl implements TaskService {
         List<Boolean> al = new ArrayList<>();
         al.add(true);
         al.add(optionalDailyWordsResponse.get().getCompleted());
-        dateCompletedStatusMap.put(tuple.getDate(), al);
+        Date newDate = tuple.getDate();
+        Calendar c = Calendar.getInstance();
+        c.setTime(newDate);
+        c.add(Calendar.DATE, 1);
+        newDate = c.getTime();
+        dateCompletedStatusMap.put(newDate, al);
       }else{
         List<Boolean> al = new ArrayList<>();
         al.add(false);
         al.add(false);
-        dateCompletedStatusMap.put(tuple.getDate(), al);
+        Date newDate = tuple.getDate();
+        Calendar c = Calendar.getInstance();
+        c.setTime(newDate);
+        c.add(Calendar.DATE, 1);
+        newDate = c.getTime();
+        dateCompletedStatusMap.put(newDate, al);
       }
 
     });
