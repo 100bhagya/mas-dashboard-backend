@@ -24,7 +24,9 @@ public interface TaskService {
 
   DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
-  DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordId);
+  DailyWordsResponse getDailyWordsResponseUser (final Long dailyWordId);
+
+  DailyWordsResponse getDailyWordsResponseAdmin (final Long studentId, final Long dailyWordId);
 
   DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 

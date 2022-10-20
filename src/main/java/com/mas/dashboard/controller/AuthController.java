@@ -43,6 +43,14 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    //Get userInfo
+    @GetMapping("/getUser")
+    public Long getUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUserDetailsImpl obj = (AppUserDetailsImpl)auth.getPrincipal();
+        return obj.getId();
+    }
+
     //login endpoint for signing up a user
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

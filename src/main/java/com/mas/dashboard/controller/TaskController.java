@@ -55,10 +55,16 @@ public class TaskController {
     }
 
     @GetMapping("/daily-words-response-admin")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<DailyWordsResponse> getDailyWordsResponse (@RequestParam final Long studentId,
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DailyWordsResponse> getDailyWordsResponseAdmin (@RequestParam final Long studentId,
                                                                         @RequestParam final Long dailyWordsId) {
-        return new ResponseEntity<>(this.taskService.getDailyWordsResponse(studentId, dailyWordsId), HttpStatus.OK);
+        return new ResponseEntity<>(this.taskService.getDailyWordsResponseAdmin(studentId, dailyWordsId), HttpStatus.OK);
+    }
+
+    @GetMapping("/daily-words-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<DailyWordsResponse> getDailyWordsResponseUser (@RequestParam final Long dailyWordsId) {
+        return new ResponseEntity<>(this.taskService.getDailyWordsResponseUser(dailyWordsId), HttpStatus.OK);
     }
 
     @PutMapping("/daily-words-response")

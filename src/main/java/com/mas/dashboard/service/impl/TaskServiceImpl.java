@@ -12,9 +12,12 @@ import com.mas.dashboard.repository.DailyWordRepository;
 import com.mas.dashboard.repository.DailyWordsResponseRepository;
 import com.mas.dashboard.repository.TaskRatingRepository;
 import com.mas.dashboard.repository.WeeklySummaryRepository;
+import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import com.mas.dashboard.service.TaskService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Tuple;
@@ -102,7 +105,18 @@ public class TaskServiceImpl implements TaskService {
     return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
-  public DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordsId) {
+  public DailyWordsResponse getDailyWordsResponseUser (final Long dailyWordsId) {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    AppUserDetailsImpl obj = (AppUserDetailsImpl)auth.getPrincipal();
+    final Long studentId = obj.getId();
+    final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(studentId, dailyWordsId);
+    if (!optionalDailyWordsResponse.isPresent()) {
+      return null;
+    }
+    return optionalDailyWordsResponse.get();
+  }
+
+  public DailyWordsResponse getDailyWordsResponseAdmin (final Long studentId, final Long dailyWordsId) {
     final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(studentId, dailyWordsId);
     if (!optionalDailyWordsResponse.isPresent()) {
       return null;
