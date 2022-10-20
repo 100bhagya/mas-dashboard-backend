@@ -54,7 +54,7 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.saveDailyWordsResponse(dailyWordsResponseDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/daily-words-response-admin")
+    @GetMapping("/daily-words-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<DailyWordsResponse> getDailyWordsResponse (@RequestParam final Long studentId,
                                                                         @RequestParam final Long dailyWordsId) {
