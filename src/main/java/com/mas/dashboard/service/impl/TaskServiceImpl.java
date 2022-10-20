@@ -153,19 +153,12 @@ public class TaskServiceImpl implements TaskService {
         al.add(optionalDailyWordsResponse.get().getCompleted());
         Date newDate = tuple.getDate();
         Calendar c = Calendar.getInstance();
-        c.setTime(newDate);
-        c.add(Calendar.DATE, 1);
-        newDate = c.getTime();
         dateCompletedStatusMap.put(newDate, al);
       }else{
         List<Boolean> al = new ArrayList<>();
         al.add(false);
         al.add(false);
         Date newDate = tuple.getDate();
-        Calendar c = Calendar.getInstance();
-        c.setTime(newDate);
-        c.add(Calendar.DATE, 1);
-        newDate = c.getTime();
         dateCompletedStatusMap.put(newDate, al);
       }
 
