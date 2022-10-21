@@ -1,13 +1,7 @@
 package com.mas.dashboard.service;
 
-import com.mas.dashboard.dto.DailyWordsDto;
-import com.mas.dashboard.dto.DailyWordsResponseDto;
-import com.mas.dashboard.dto.TaskRatingDto;
-import com.mas.dashboard.dto.WeeklySummaryDto;
-import com.mas.dashboard.entity.DailyWords;
-import com.mas.dashboard.entity.DailyWordsResponse;
-import com.mas.dashboard.entity.TaskRating;
-import com.mas.dashboard.entity.WeeklySummary;
+import com.mas.dashboard.dto.*;
+import com.mas.dashboard.entity.*;
 
 import java.util.Date;
 import java.util.List;
@@ -33,6 +27,10 @@ public interface TaskService {
   WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 
   WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber);
+
+  WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto);
+
+  WeeklySummaryResponse getWeeklySummaryResponse (final Long studentId, final Long weeklySummaryId);
 
   TaskRating createTaskRating (final TaskRatingDto taskRatingDto);
 

@@ -1,9 +1,6 @@
 package com.mas.dashboard.controller;
 
-import com.mas.dashboard.dto.DailyWordsDto;
-import com.mas.dashboard.dto.DailyWordsResponseDto;
-import com.mas.dashboard.dto.TaskRatingDto;
-import com.mas.dashboard.dto.WeeklySummaryDto;
+import com.mas.dashboard.dto.*;
 import com.mas.dashboard.entity.*;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.service.TaskService;
@@ -92,6 +89,19 @@ public class TaskController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<WeeklySummary> getWeeklySummary (@RequestParam final Integer weekNumber, @RequestParam final Integer articleNumber) {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(weekNumber, articleNumber), HttpStatus.OK);
+    }
+
+    @PostMapping("/weekly-summary-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<WeeklySummaryResponse> saveWeeklySummaryResponse (@RequestBody final WeeklySummaryResponseDto weeklySummaryResponseDto) {
+        return new ResponseEntity<>(this.taskService.saveWeeklySummaryResponse(weeklySummaryResponseDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/weekly-summary-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<WeeklySummaryResponse> getWeeklySummaryResponse (@RequestParam final Long studentId,
+                                                                     @RequestParam final Long weeklySummaryId) {
+        return new ResponseEntity<>(this.taskService.getWeeklySummaryResponse(studentId, weeklySummaryId), HttpStatus.OK);
     }
 
     @PostMapping("task-rating")
