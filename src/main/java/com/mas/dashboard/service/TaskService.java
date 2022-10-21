@@ -12,6 +12,7 @@ import com.mas.dashboard.entity.WeeklySummary;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface TaskService {
 
@@ -19,13 +20,15 @@ public interface TaskService {
 
   DailyWords getDailyWords (final Date date);
 
+  List<DailyWords> getMonthlyWords (final Date startDate, final Date endDate);
+
   DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
   DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordId);
 
   DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
-  Map<Date, Boolean> checkDailyWordsCompletedStatus (final Date fromDate, final Date toDate, final Long studentId);
+  Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate, final Long studentId);
 
   WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 

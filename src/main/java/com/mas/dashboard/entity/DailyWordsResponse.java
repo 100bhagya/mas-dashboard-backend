@@ -42,4 +42,6 @@ public class DailyWordsResponse {
 
   @LastModifiedBy
   private Long updatedBy;
+
+  public Boolean getCompleted() { return completed; }
 }
