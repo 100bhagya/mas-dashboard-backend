@@ -12,6 +12,10 @@ public class WeeklySummaryDto {
 
   private String articleText;
 
+  private String author;
+
+  private String category;
+
   private Long readTime;
 
   private Boolean deleted;

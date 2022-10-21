@@ -22,6 +22,10 @@ public class WeeklySummary {
 
   private String articleText;
 
+  private String author;
+
+  private String category;
+
   private Long readTime;
 
   private Integer weekNumber;

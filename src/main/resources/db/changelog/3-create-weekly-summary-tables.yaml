@@ -20,6 +20,12 @@ databaseChangeLog:
                   name: article_text
                   type: TEXT
               - column:
+                  name: author
+                  type: VARCHAR
+              - column:
+                  name: category
+                  type: VARCHAR
+              - column:
                   name: read_time
                   type: BIGINT
               - column:
