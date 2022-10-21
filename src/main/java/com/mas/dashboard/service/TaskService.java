@@ -32,6 +32,8 @@ public interface TaskService {
 
   WeeklySummaryResponse getWeeklySummaryResponse (final Long studentId, final Long weeklySummaryId);
 
+  WeeklySummaryResponse updateWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto);
+
   TaskRating createTaskRating (final TaskRatingDto taskRatingDto);
 
   List<TaskRating> getAllTaskRating (final Long studentId, final String category);

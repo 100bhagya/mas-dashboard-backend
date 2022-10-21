@@ -104,6 +104,12 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.getWeeklySummaryResponse(studentId, weeklySummaryId), HttpStatus.OK);
     }
 
+    @PutMapping("/weekly-summary-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<WeeklySummaryResponse> updateWeeklySummaryResponse (@RequestBody final WeeklySummaryResponseDto weeklySummaryResponseDto) {
+        return new ResponseEntity<>(this.taskService.updateWeeklySummaryResponse(weeklySummaryResponseDto), HttpStatus.OK);
+    }
+
     @PostMapping("task-rating")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<TaskRating> createTaskRating (@RequestBody final TaskRatingDto taskRatingDto) {

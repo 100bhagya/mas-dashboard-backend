@@ -230,6 +230,23 @@ public class TaskServiceImpl implements TaskService {
     return optionalWeeklySummaryResponse.get();
   }
 
+  public WeeklySummaryResponse updateWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
+    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(weeklySummaryResponseDto.getStudentId(),
+            weeklySummaryResponseDto.getWeeklySummaryId());
+    if (!optionalWeeklySummaryResponse.isPresent()) {
+      throw new IllegalArgumentException("Weekly summary response not found for the given student and word id");
+    }
+    final WeeklySummaryResponse weeklySummaryResponse = optionalWeeklySummaryResponse.get();
+    weeklySummaryResponse.setResponse(weeklySummaryResponseDto.getResponse());
+    weeklySummaryResponse.setUpdatedDate(new Date());
+    if (!weeklySummaryResponseDto.getResponse().isEmpty()) {
+      weeklySummaryResponse.setCompleted(Boolean.TRUE);
+    }else{
+      weeklySummaryResponse.setCompleted(Boolean.FALSE);
+    }
+    return this.weeklySummaryResponseRepository.save(weeklySummaryResponse);
+  }
+
   public TaskRating createTaskRating (final TaskRatingDto taskRatingDto) {
     final Optional<TaskRating> optionalTaskRating = this.taskRatingRepository.
             findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
