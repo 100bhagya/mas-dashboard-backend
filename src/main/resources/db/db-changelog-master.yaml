@@ -7,5 +7,3 @@ databaseChangeLog:
       file: classpath:db/changelog/3-create-weekly-summary-tables.yaml
   - include:
       file: classpath:db/changelog/4-create-ratings-table.yaml
-  - include:
-      file: classpath:db/changelog/5-create-weekly-summary-response-table.yaml
