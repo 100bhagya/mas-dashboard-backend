@@ -1,17 +1,12 @@
 package com.mas.dashboard.service.impl;
 
-import com.mas.dashboard.dto.DailyWordsDto;
-import com.mas.dashboard.dto.DailyWordsResponseDto;
-import com.mas.dashboard.dto.TaskRatingDto;
-import com.mas.dashboard.dto.WeeklySummaryDto;
-import com.mas.dashboard.entity.DailyWords;
-import com.mas.dashboard.entity.DailyWordsResponse;
-import com.mas.dashboard.entity.TaskRating;
-import com.mas.dashboard.entity.WeeklySummary;
+import com.mas.dashboard.dto.*;
+import com.mas.dashboard.entity.*;
 import com.mas.dashboard.repository.DailyWordRepository;
 import com.mas.dashboard.repository.DailyWordsResponseRepository;
 import com.mas.dashboard.repository.TaskRatingRepository;
 import com.mas.dashboard.repository.WeeklySummaryRepository;
+import com.mas.dashboard.repository.WeeklySummaryResponseRepository;
 import com.mas.dashboard.service.TaskService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +27,9 @@ public class TaskServiceImpl implements TaskService {
 
   @Autowired
   private WeeklySummaryRepository weeklySummaryRepository;
+
+  @Autowired
+  private WeeklySummaryResponseRepository weeklySummaryResponseRepository;
 
   @Autowired
   private TaskRatingRepository taskRatingRepository;
@@ -81,7 +79,7 @@ public class TaskServiceImpl implements TaskService {
 
   public DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
     final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.
-        findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(), dailyWordsResponseDto.getDailyWordsId());
+            findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(), dailyWordsResponseDto.getDailyWordsId());
     if (optionalDailyWordsResponse.isPresent()) {
       throw new IllegalArgumentException("Daily words response already exists");
     }
@@ -112,7 +110,7 @@ public class TaskServiceImpl implements TaskService {
 
   public DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
     final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(),
-        dailyWordsResponseDto.getDailyWordsId());
+            dailyWordsResponseDto.getDailyWordsId());
     if (!optionalDailyWordsResponse.isPresent()) {
       throw new IllegalArgumentException("Daily words response not found for the given student and word id");
     }
@@ -183,6 +181,8 @@ public class TaskServiceImpl implements TaskService {
     final WeeklySummary weeklySummary = new WeeklySummary();
     weeklySummary.setArticleTopic(weeklySummaryDto.getArticleTopic());
     weeklySummary.setArticleText(weeklySummaryDto.getArticleText());
+    weeklySummary.setAuthor(weeklySummaryDto.getAuthor());
+    weeklySummary.setCategory(weeklySummaryDto.getCategory());
     weeklySummary.setReadTime(weeklySummaryDto.getReadTime());
     weeklySummary.setWeekNumber(weeklySummaryDto.getWeekNumber());
     weeklySummary.setArticleNumber(weeklySummaryDto.getArticleNumber());
@@ -195,17 +195,64 @@ public class TaskServiceImpl implements TaskService {
 
   public WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber) {
     final Optional<WeeklySummary> optionalWeeklySummary = this.weeklySummaryRepository.
-        findByWeekNumberAndArticleNumberAndDeletedFalse(weekNumber, articleNumber);
+            findByWeekNumberAndArticleNumberAndDeletedFalse(weekNumber, articleNumber);
     if (!optionalWeeklySummary.isPresent()) {
       throw new IllegalArgumentException("Weekly Summary not found for the given week and article number");
     }
     return optionalWeeklySummary.get();
   }
 
+  public WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
+    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.
+            findByStudentIdAndWeeklySummaryId(weeklySummaryResponseDto.getStudentId(), weeklySummaryResponseDto.getWeeklySummaryId());
+    if (optionalWeeklySummaryResponse.isPresent()) {
+      throw new IllegalArgumentException("Weekly summary response already exists");
+    }
+    final WeeklySummaryResponse weeklySummaryResponse = new WeeklySummaryResponse();
+    weeklySummaryResponse.setWeeklySummaryId(weeklySummaryResponseDto.getWeeklySummaryId());
+    weeklySummaryResponse.setStudentId(weeklySummaryResponseDto.getStudentId());
+    weeklySummaryResponse.setResponse(weeklySummaryResponseDto.getResponse());
+    weeklySummaryResponse.setCreatedBy(weeklySummaryResponseDto.getStudentId());
+    weeklySummaryResponse.setCreatedDate(new Date());
+    weeklySummaryResponse.setUpdatedBy(weeklySummaryResponseDto.getStudentId());
+    weeklySummaryResponse.setUpdatedDate(new Date());
+    if (weeklySummaryResponseDto.getResponse().isEmpty()) {
+      weeklySummaryResponse.setCompleted(Boolean.FALSE);
+    } else {
+      weeklySummaryResponse.setCompleted(Boolean.TRUE);
+    }
+    return this.weeklySummaryResponseRepository.save(weeklySummaryResponse);
+  }
+
+  public WeeklySummaryResponse getWeeklySummaryResponse (final Long studentId, final Long weeklySummaryId) {
+    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, weeklySummaryId);
+    if (!optionalWeeklySummaryResponse.isPresent()) {
+      return null;
+    }
+    return optionalWeeklySummaryResponse.get();
+  }
+
+  public WeeklySummaryResponse updateWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
+    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(weeklySummaryResponseDto.getStudentId(),
+            weeklySummaryResponseDto.getWeeklySummaryId());
+    if (!optionalWeeklySummaryResponse.isPresent()) {
+      throw new IllegalArgumentException("Weekly summary response not found for the given student and word id");
+    }
+    final WeeklySummaryResponse weeklySummaryResponse = optionalWeeklySummaryResponse.get();
+    weeklySummaryResponse.setResponse(weeklySummaryResponseDto.getResponse());
+    weeklySummaryResponse.setUpdatedDate(new Date());
+    if (!weeklySummaryResponseDto.getResponse().isEmpty()) {
+      weeklySummaryResponse.setCompleted(Boolean.TRUE);
+    }else{
+      weeklySummaryResponse.setCompleted(Boolean.FALSE);
+    }
+    return this.weeklySummaryResponseRepository.save(weeklySummaryResponse);
+  }
+
   public TaskRating createTaskRating (final TaskRatingDto taskRatingDto) {
     final Optional<TaskRating> optionalTaskRating = this.taskRatingRepository.
-        findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
-            taskRatingDto.getCategory(), taskRatingDto.getChapter());
+            findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
+                    taskRatingDto.getCategory(), taskRatingDto.getChapter());
     if (optionalTaskRating.isPresent()) {
       throw new IllegalArgumentException("Task rating already exists for the given student id, category and chapter");
     }
@@ -233,8 +280,8 @@ public class TaskServiceImpl implements TaskService {
 
   public TaskRating updateTaskRating (final TaskRatingDto taskRatingDto) {
     final Optional<TaskRating> optionalTaskRating = this.taskRatingRepository.
-        findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
-            taskRatingDto.getCategory(), taskRatingDto.getChapter());
+            findByStudentIdAndCategoryAndChapterAndDeletedFalse(taskRatingDto.getStudentId(),
+                    taskRatingDto.getCategory(), taskRatingDto.getChapter());
     if (!optionalTaskRating.isPresent()) {
       throw new IllegalArgumentException("Task rating not found for the given student id, category and chapter");
     }
