@@ -91,6 +91,18 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(weekNumber, articleNumber), HttpStatus.OK);
     }
 
+    @GetMapping("/all-weekly-summary")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<WeeklySummary>> getAllWeeklySummary () {
+        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getAllWeeklySummary(), HttpStatus.OK);
+    }
+
+    @GetMapping("/week-weekly-summary")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<WeeklySummary>> getWeeklySummaryByWeek (@RequestParam final Integer weekNumber) {
+        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getWeeklySummaryByWeek(weekNumber), HttpStatus.OK);
+    }
+
     @PostMapping("/weekly-summary-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<WeeklySummaryResponse> saveWeeklySummaryResponse (@RequestBody final WeeklySummaryResponseDto weeklySummaryResponseDto) {
@@ -102,6 +114,12 @@ public class TaskController {
     public ResponseEntity<WeeklySummaryResponse> getWeeklySummaryResponse (@RequestParam final Long studentId,
                                                                      @RequestParam final Long weeklySummaryId) {
         return new ResponseEntity<>(this.taskService.getWeeklySummaryResponse(studentId, weeklySummaryId), HttpStatus.OK);
+    }
+
+    @GetMapping("/weekly-summary-response-status")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<Integer, List<Boolean>>> weeklySummaryResponseStatus (@RequestParam final Long studentId) {
+        return new ResponseEntity<Map<Integer, List<Boolean>>>(this.taskService.weeklySummaryResponseStatus(studentId), HttpStatus.OK);
     }
 
     @PutMapping("/weekly-summary-response")
