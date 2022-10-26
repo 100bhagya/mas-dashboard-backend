@@ -202,6 +202,22 @@ public class TaskServiceImpl implements TaskService {
     return optionalWeeklySummary.get();
   }
 
+  public List<WeeklySummary> getAllWeeklySummary(){
+    final List<WeeklySummary> allWeeklySummary = this.weeklySummaryRepository.findAll();
+    if(allWeeklySummary.size() == 0){
+      throw new IllegalArgumentException("No weekly summary found!");
+    }
+    return allWeeklySummary;
+  }
+
+  public List<WeeklySummary> getWeeklySummaryByWeek(final Integer weekNumber){
+    final List<WeeklySummary> Summary = this.weeklySummaryRepository.findByWeekNumber(weekNumber);
+    if(Summary.size() == 0){
+      throw new IllegalArgumentException("No weekly summary found for given week!");
+    }
+    return Summary;
+  }
+
   public WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
     final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.
             findByStudentIdAndWeeklySummaryId(weeklySummaryResponseDto.getStudentId(), weeklySummaryResponseDto.getWeeklySummaryId());
@@ -230,6 +246,76 @@ public class TaskServiceImpl implements TaskService {
       return null;
     }
     return optionalWeeklySummaryResponse.get();
+  }
+
+  //returns list {weekNo, articleNo, completed} for studentId provided
+//  public List<List<Object>> weeklySummaryResponseStatus(Long studentId) {
+//    final List<WeeklySummary> allWeeklySummary = this.weeklySummaryRepository.findAll();
+//    List<List<Object>> weeklySummaryResponseStatus = new ArrayList<>();
+//    allWeeklySummary.forEach(weeklySummary -> {
+//      final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, weeklySummary.getId());
+//      if(!optionalWeeklySummaryResponse.isPresent()){
+//        List<Object> al = new ArrayList<>();
+//        al.add(weeklySummary.getWeekNumber());
+//        al.add(weeklySummary.getArticleNumber());
+//        al.add(false);
+//        weeklySummaryResponseStatus.add(al);
+//      }else{
+//        List<Object> al = new ArrayList<>();
+//        al.add(weeklySummary.getWeekNumber());
+//        al.add(weeklySummary.getArticleNumber());
+//        al.add(optionalWeeklySummaryResponse.get().getCompleted());
+//        weeklySummaryResponseStatus.add(al);
+//      }
+//    });
+//    return weeklySummaryResponseStatus;
+//  }
+
+  public Map<Integer, List<Boolean>> weeklySummaryResponseStatus(Long studentId) {
+    Map<Integer, List<Boolean>> res = new HashMap<>();
+    for(int i=1; i<=24; i++){
+      final List<WeeklySummary> Summary = this.weeklySummaryRepository.findByWeekNumber(i);
+      if(Summary.size() == 0){
+        List<Boolean> al = new ArrayList<>();
+        al.add(false);
+        al.add(false);
+        res.put(i, al);
+      }
+      else if(Summary.size() == 1) {
+        final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, Summary.get(0).getId());
+        if(! optionalWeeklySummaryResponse.isPresent()){
+          List<Boolean> al = new ArrayList<>();
+          al.add(false);
+          al.add(false);
+          res.put(i, al);
+        }else{
+          int articleNumber = Summary.get(0).getArticleNumber() - 1;
+          List<Boolean> al = new ArrayList<>();
+          if(articleNumber == 0){
+            al.add(optionalWeeklySummaryResponse.get().getCompleted());
+            al.add(false);
+            res.put(i, al);
+          }else{
+            al.add(false);
+            al.add(optionalWeeklySummaryResponse.get().getCompleted());
+            res.put(i, al);
+          }
+        }
+      }
+      else{
+        List<Boolean> al = new ArrayList<>();
+        Summary.forEach(weeklySummary -> {
+          final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, weeklySummary.getId());
+          if(!optionalWeeklySummaryResponse.isPresent()){
+            al.add(false);
+          }else{
+            al.add(optionalWeeklySummaryResponse.get().getCompleted());
+          }
+        });
+        res.put(i, al);
+      }
+    }
+    return res;
   }
 
   public WeeklySummaryResponse updateWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {

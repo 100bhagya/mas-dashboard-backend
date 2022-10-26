@@ -16,4 +16,8 @@ public interface WeeklySummaryRepository extends JpaRepository<WeeklySummary, Lo
 
   Optional<WeeklySummary> findByWeekNumberAndArticleNumberAndDeletedFalse (final Integer weekNumber, final Integer articleNumber);
 
+  List<WeeklySummary> findAll();
+
+  List<WeeklySummary> findByWeekNumber(final Integer weekNumber);
+
 }
