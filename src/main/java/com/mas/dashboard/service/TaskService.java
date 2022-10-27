@@ -3,10 +3,7 @@ package com.mas.dashboard.service;
 import com.mas.dashboard.dto.*;
 import com.mas.dashboard.entity.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public interface TaskService {
 
@@ -27,6 +24,12 @@ public interface TaskService {
   WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 
   WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber);
+
+//  List<WeeklySummary> getAllWeeklySummary();
+//
+//  List<WeeklySummary> getWeeklySummaryByWeek(Integer weekNumber);
+
+  Map<Integer, List<Boolean>> weeklySummaryResponseStatus(final Long StudentId);
 
   WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto);
 
