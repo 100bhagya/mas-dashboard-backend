@@ -202,21 +202,21 @@ public class TaskServiceImpl implements TaskService {
     return optionalWeeklySummary.get();
   }
 
-  public List<WeeklySummary> getAllWeeklySummary(){
-    final List<WeeklySummary> allWeeklySummary = this.weeklySummaryRepository.findAll();
-    if(allWeeklySummary.size() == 0){
-      throw new IllegalArgumentException("No weekly summary found!");
-    }
-    return allWeeklySummary;
-  }
-
-  public List<WeeklySummary> getWeeklySummaryByWeek(final Integer weekNumber){
-    final List<WeeklySummary> Summary = this.weeklySummaryRepository.findByWeekNumber(weekNumber);
-    if(Summary.size() == 0){
-      throw new IllegalArgumentException("No weekly summary found for given week!");
-    }
-    return Summary;
-  }
+//  public List<WeeklySummary> getAllWeeklySummary(){
+//    final List<WeeklySummary> allWeeklySummary = this.weeklySummaryRepository.findAll();
+//    if(allWeeklySummary.size() == 0){
+//      throw new IllegalArgumentException("No weekly summary found!");
+//    }
+//    return allWeeklySummary;
+//  }
+//
+//  public List<WeeklySummary> getWeeklySummaryByWeek(final Integer weekNumber){
+//    final List<WeeklySummary> Summary = this.weeklySummaryRepository.findByWeekNumber(weekNumber);
+//    if(Summary.size() == 0){
+//      throw new IllegalArgumentException("No weekly summary found for given week!");
+//    }
+//    return Summary;
+//  }
 
   public WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
     final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.
@@ -271,6 +271,7 @@ public class TaskServiceImpl implements TaskService {
 //    return weeklySummaryResponseStatus;
 //  }
 
+//  Todo: Optimise this endpoint
   public Map<Integer, List<Boolean>> weeklySummaryResponseStatus(Long studentId) {
     Map<Integer, List<Boolean>> res = new HashMap<>();
     for(int i=1; i<=24; i++){

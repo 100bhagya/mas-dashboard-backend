@@ -25,9 +25,9 @@ public interface TaskService {
 
   WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber);
 
-  List<WeeklySummary> getAllWeeklySummary();
-
-  List<WeeklySummary> getWeeklySummaryByWeek(Integer weekNumber);
+//  List<WeeklySummary> getAllWeeklySummary();
+//
+//  List<WeeklySummary> getWeeklySummaryByWeek(Integer weekNumber);
 
   Map<Integer, List<Boolean>> weeklySummaryResponseStatus(final Long StudentId);
 

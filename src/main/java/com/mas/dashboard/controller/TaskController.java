@@ -91,17 +91,17 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(weekNumber, articleNumber), HttpStatus.OK);
     }
 
-    @GetMapping("/all-weekly-summary")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<WeeklySummary>> getAllWeeklySummary () {
-        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getAllWeeklySummary(), HttpStatus.OK);
-    }
+//    @GetMapping("/all-weekly-summary")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    public ResponseEntity<List<WeeklySummary>> getAllWeeklySummary () {
+//        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getAllWeeklySummary(), HttpStatus.OK);
+//    }
 
-    @GetMapping("/week-weekly-summary")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<WeeklySummary>> getWeeklySummaryByWeek (@RequestParam final Integer weekNumber) {
-        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getWeeklySummaryByWeek(weekNumber), HttpStatus.OK);
-    }
+//    @GetMapping("/week-weekly-summary")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    public ResponseEntity<List<WeeklySummary>> getWeeklySummaryByWeek (@RequestParam final Integer weekNumber) {
+//        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getWeeklySummaryByWeek(weekNumber), HttpStatus.OK);
+//    }
 
     @PostMapping("/weekly-summary-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
