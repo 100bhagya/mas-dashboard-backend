@@ -1,7 +1,6 @@
 package com.mas.dashboard.controller;
 
-import com.mas.dashboard.payload.request.SignupRequest;
-import com.mas.dashboard.payload.request.UpdateUserRequest;
+import com.mas.dashboard.payload.request.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,7 +10,6 @@ import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.entity.AppUser;
 import com.mas.dashboard.entity.ERole;
 import com.mas.dashboard.entity.Role;
-import com.mas.dashboard.payload.request.LoginRequest;
 import com.mas.dashboard.payload.request.SignupRequest;
 import com.mas.dashboard.payload.response.JwtResponse;
 import com.mas.dashboard.payload.response.MessageResponse;

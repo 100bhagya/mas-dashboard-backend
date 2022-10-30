@@ -3,7 +3,9 @@ package com.mas.dashboard.controller;
 import com.mas.dashboard.entity.AppUser;
 import com.mas.dashboard.entity.ERole;
 import com.mas.dashboard.entity.Role;
+import com.mas.dashboard.payload.request.ForgotPasswordRequest;
 import com.mas.dashboard.payload.request.LoginRequest;
+import com.mas.dashboard.payload.request.ResetPasswordRequest;
 import com.mas.dashboard.payload.request.SignupRequest;
 import com.mas.dashboard.payload.response.JwtResponse;
 import com.mas.dashboard.payload.response.MessageResponse;
@@ -11,12 +13,14 @@ import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.repository.RoleRepository;
 import com.mas.dashboard.security.jwt.JwtUtils;
 import com.mas.dashboard.security.services.AppUserDetailsImpl;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -148,4 +152,51 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+    @PostMapping("/forgot_password")
+    public ResponseEntity<?> processForgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        String email = forgotPasswordRequest.getEmail();
+        String token = UUID.randomUUID().toString();
+
+        Optional<AppUser> optionalUser = appUserRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            AppUser user = optionalUser.get();
+            user.setPasswordResetToken(token);
+            appUserRepository.save(user);
+        } else {
+            throw new UsernameNotFoundException("Could not find any user with that email " + email);
+        }
+
+        return ResponseEntity.ok(new MessageResponse("http://localhost:8080/api/auth/reset_password?token=" + token + "  link sent to mail = " + email));
+    }
+
+    @GetMapping("/reset_password")
+    public AppUser showResetPasswordForm(@RequestParam final String token) {
+        Optional<AppUser> optionalAppUser = appUserRepository.findByPasswordResetToken(token);
+
+        if (! optionalAppUser.isPresent()) {
+            throw new UsernameNotFoundException("Invalid Token");
+        }
+
+        return optionalAppUser.get();
+    }
+
+    @PostMapping("/reset_password")
+    public String processResetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        String token = resetPasswordRequest.getToken();
+        String password = resetPasswordRequest.getPassword();
+        Optional<AppUser> optionalAppUser = appUserRepository.findByPasswordResetToken(token);
+        if (! optionalAppUser.isPresent()) {
+            throw new UsernameNotFoundException("Invalid Token");
+        } else {
+            AppUser user = optionalAppUser.get();
+
+            String encodedPassword = encoder.encode(password);
+            user.setPassword(encodedPassword);
+            user.setPasswordResetToken(null);
+            appUserRepository.save(user);
+            return("You have successfully changed your password.");
+        }
+    }
+
 }

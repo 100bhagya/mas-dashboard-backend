@@ -14,7 +14,6 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     AppUserRepository appUserRepository;
-
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
