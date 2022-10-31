@@ -16,6 +16,7 @@ import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import java.util.Properties;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -46,6 +53,8 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired private JavaMailSender javaMailSender;
 
     //login endpoint for signing up a user
     @PostMapping("/login")
@@ -163,11 +172,18 @@ public class AuthController {
             AppUser user = optionalUser.get();
             user.setPasswordResetToken(token);
             appUserRepository.save(user);
+            String resetPasswordLink = "http://localhost:3000/resetPassword/" + token;
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("jaditya8109@gmail.com");
+            message.setTo(email);
+            message.setSubject("Password reset link: MAS Dashboard");
+            message.setText(resetPasswordLink);
+            javaMailSender.send(message);
         } else {
             throw new UsernameNotFoundException("Could not find any user with that email " + email);
         }
 
-        return ResponseEntity.ok(new MessageResponse("http://localhost:8080/api/auth/reset_password?token=" + token + "  link sent to mail = " + email));
+        return ResponseEntity.ok(new MessageResponse("http://localhost:3000/resetPassword/" + token + "  link sent to mail = " + email));
     }
 
     @GetMapping("/reset_password")

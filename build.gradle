@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework:spring-context:5.3.23'
+	implementation 'javax.mail:mail:1.4.7'
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVersion}"
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -35,6 +37,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation "org.mapstruct:mapstruct:${mapStructVersion}"
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework:spring-context-support:5.2.1.RELEASE'
 }
 
 tasks.named('test') {
