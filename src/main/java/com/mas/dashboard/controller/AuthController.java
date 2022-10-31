@@ -163,15 +163,17 @@ public class AuthController {
     }
 
     @PostMapping("/forgot_password")
-    public ResponseEntity<?> processForgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+    public String processForgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         String email = forgotPasswordRequest.getEmail();
         String token = UUID.randomUUID().toString();
 
         Optional<AppUser> optionalUser = appUserRepository.findByEmail(email);
+        String response = "";
         if (optionalUser.isPresent()) {
             AppUser user = optionalUser.get();
             user.setPasswordResetToken(token);
             appUserRepository.save(user);
+            response = response + "Hi " + user.getFirstName() + " An email to reset your password has been sent to your email address";
             String resetPasswordLink = "http://localhost:3000/resetPassword/" + token;
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("jaditya8109@gmail.com");
@@ -180,21 +182,27 @@ public class AuthController {
             message.setText(resetPasswordLink);
             javaMailSender.send(message);
         } else {
+//            response = response + "Could not find any user with email " + email;
             throw new UsernameNotFoundException("Could not find any user with that email " + email);
         }
 
-        return ResponseEntity.ok(new MessageResponse("http://localhost:3000/resetPassword/" + token + "  link sent to mail = " + email));
+        return response;
     }
 
     @GetMapping("/reset_password")
-    public AppUser showResetPasswordForm(@RequestParam final String token) {
+    public String showResetPasswordForm(@RequestParam final String token) {
+        String response = "";
         Optional<AppUser> optionalAppUser = appUserRepository.findByPasswordResetToken(token);
 
         if (! optionalAppUser.isPresent()) {
-            throw new UsernameNotFoundException("Invalid Token");
+//            response = response + "Invalid Link to reset password";
+            throw new UsernameNotFoundException("Invalid Link to reset password");
+        }else {
+            AppUser user = optionalAppUser.get();
+            response = response + "Hi " + user.getFirstName() + " update your password here!";
         }
 
-        return optionalAppUser.get();
+        return response;
     }
 
     @PostMapping("/reset_password")
