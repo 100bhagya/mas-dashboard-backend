@@ -46,11 +46,11 @@ public class AppUser {
 
   private String profilePic;
 
-  private Integer phoneNo;
+  private String phoneNo;
 
   private String address;
 
-  private Integer postalCode;
+  private String postalCode;
 
   private String state;
 
@@ -150,17 +150,17 @@ public class AppUser {
 
   public void setProfilePic(String profilePic) { this.profilePic = profilePic;}
 
-  public Integer getPhoneNo() {return phoneNo;}
+  public String getPhoneNo() {return phoneNo;}
 
-  public void setPhoneNo(Integer phoneNo) {this.phoneNo = phoneNo;}
+  public void setPhoneNo(String phoneNo) {this.phoneNo = phoneNo;}
 
   public String getAddress() {return address;}
 
   public void setAddress(String address){this.address = address;}
 
-  public Integer getPostalCode() {return postalCode;}
+  public String getPostalCode() {return postalCode;}
 
-  public void setPostalCode(Integer postalCode) {this.postalCode = postalCode;}
+  public void setPostalCode(String postalCode) {this.postalCode = postalCode;}
 
   public String getState() {return state;}
 

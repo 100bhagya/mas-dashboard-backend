@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.entity.AppUser;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -39,13 +42,41 @@ public class UtilityController {
     @Autowired
     AppUserRepository appUserRepository;
 
+    @GetMapping("/getUserProfile")
+    public Map<String, Object> getUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUserDetailsImpl obj = (AppUserDetailsImpl)auth.getPrincipal();
+
+        Optional<AppUser> optionalUser = appUserRepository.findByEmail(obj.getEmail());
+        if(!optionalUser.isPresent()){
+            throw new UsernameNotFoundException("No user found");
+        }
+        AppUser user = optionalUser.get();
+        Map<String, Object> addUser = new HashMap<>();
+        addUser.put("firstName",user.getFirstName());
+        addUser.put("lastName",user.getLastName());
+        addUser.put("username",user.getUsername());
+        addUser.put("email", user.getEmail());
+        addUser.put("profilePic",user.getProfilePic());
+        addUser.put("phoneNo",user.getPhoneNo());
+        addUser.put("address",user.getAddress());
+        addUser.put("postalCode",user.getPostalCode());
+        addUser.put("state",user.getState());
+        addUser.put("city",user.getCity());
+        return addUser;
+    }
+
     @PutMapping("/updateProfile")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public AppUser updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
+    public String updateUser(@Valid @RequestBody UpdateUserRequest updateUserRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUserDetailsImpl loggedInUser = (AppUserDetailsImpl)auth.getPrincipal();
 
         final Optional<AppUser> optionalAppUser = this.appUserRepository.findByEmail(loggedInUser.getEmail());
+        if(!optionalAppUser.isPresent()){
+            throw new UsernameNotFoundException("No user found");
+        }
+
         final AppUser user =  optionalAppUser.get();
 
         user.setFirstName(updateUserRequest.getFirstName());
@@ -59,7 +90,9 @@ public class UtilityController {
         user.setCity(updateUserRequest.getCity());
         user.setUpdatedDate(new Date());
 
-        return this.appUserRepository.save(user);
+        this.appUserRepository.save(user);
+
+        return "Your profile has been updated successfully";
     }
 
 }
