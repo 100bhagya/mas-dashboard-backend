@@ -33,13 +33,13 @@ databaseChangeLog:
                   type: VARCHAR
               - column:
                   name: phone_no
-                  type: INT
+                  type: VARCHAR
               - column:
                   name: address
                   type: VARCHAR
               - column:
                   name: postal_code
-                  type: INT
+                  type: VARCHAR
               - column:
                   name: state
                   type: VARCHAR
