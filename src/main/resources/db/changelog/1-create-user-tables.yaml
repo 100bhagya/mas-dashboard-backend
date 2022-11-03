@@ -29,6 +29,27 @@ databaseChangeLog:
                   name: password
                   type: VARCHAR
               - column:
+                  name: profile_pic
+                  type: VARCHAR
+              - column:
+                  name: phone_no
+                  type: VARCHAR
+              - column:
+                  name: address
+                  type: VARCHAR
+              - column:
+                  name: postal_code
+                  type: VARCHAR
+              - column:
+                  name: state
+                  type: VARCHAR
+              - column:
+                  name: city
+                  type: VARCHAR
+              - column:
+                  name: password_reset_token
+                  type: VARCHAR
+              - column:
                   name: deleted
                   type: BOOLEAN
               - column:

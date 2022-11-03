@@ -44,6 +44,20 @@ public class AppUser {
   @Size(max = 120)
   private String password;
 
+  private String profilePic;
+
+  private String phoneNo;
+
+  private String address;
+
+  private String postalCode;
+
+  private String state;
+
+  private String city;
+
+  private String passwordResetToken;
+
   private Boolean deleted;
 
   @Temporal(TemporalType.TIMESTAMP)
@@ -131,6 +145,34 @@ public class AppUser {
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
+
+  public String getProfilePic() {return profilePic;}
+
+  public void setProfilePic(String profilePic) { this.profilePic = profilePic;}
+
+  public String getPhoneNo() {return phoneNo;}
+
+  public void setPhoneNo(String phoneNo) {this.phoneNo = phoneNo;}
+
+  public String getAddress() {return address;}
+
+  public void setAddress(String address){this.address = address;}
+
+  public String getPostalCode() {return postalCode;}
+
+  public void setPostalCode(String postalCode) {this.postalCode = postalCode;}
+
+  public String getState() {return state;}
+
+  public void setState(String state){this.state = state;}
+
+  public String getCity() {return city;}
+
+  public void setCity(String city){this.city = city;}
+
+  public String getPasswordResetToken() {return passwordResetToken;}
+
+  public void setPasswordResetToken(String passwordResetToken){this.passwordResetToken = passwordResetToken;}
 
   public Boolean getDeleted() { return deleted; }
 
