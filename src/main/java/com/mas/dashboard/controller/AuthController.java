@@ -173,7 +173,7 @@ public class AuthController {
             AppUser user = optionalUser.get();
             user.setPasswordResetToken(token);
             appUserRepository.save(user);
-            response = response + "Hi " + user.getFirstName() + " An email to reset your password has been sent to your email address";
+            response = response + "Hi " + user.getFirstName() + " an email to reset your password has been sent to your email address";
             String resetPasswordLink = "http://localhost:3000/resetPassword/" + token;
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("jaditya8109@gmail.com");
