@@ -176,7 +176,7 @@ public class AuthController {
             response = response + "Hi " + user.getFirstName() + " an email to reset your password has been sent to your email address";
             String resetPasswordLink = "http://localhost:3000/resetPassword/" + token;
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("jaditya8109@gmail.com");
+            message.setFrom("gauravsaubhagya3@gmail.com");
             message.setTo(email);
             message.setSubject("Password reset link: MAS Dashboard");
             message.setText(resetPasswordLink);
