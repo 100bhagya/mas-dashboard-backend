@@ -11,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -91,18 +88,6 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.getWeeklySummary(weekNumber, articleNumber), HttpStatus.OK);
     }
 
-//    @GetMapping("/all-weekly-summary")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public ResponseEntity<List<WeeklySummary>> getAllWeeklySummary () {
-//        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getAllWeeklySummary(), HttpStatus.OK);
-//    }
-
-//    @GetMapping("/week-weekly-summary")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public ResponseEntity<List<WeeklySummary>> getWeeklySummaryByWeek (@RequestParam final Integer weekNumber) {
-//        return new ResponseEntity<List<WeeklySummary>>(this.taskService.getWeeklySummaryByWeek(weekNumber), HttpStatus.OK);
-//    }
-
     @PostMapping("/weekly-summary-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<WeeklySummaryResponse> saveWeeklySummaryResponse (@RequestBody final WeeklySummaryResponseDto weeklySummaryResponseDto) {
@@ -118,8 +103,8 @@ public class TaskController {
 
     @GetMapping("/weekly-summary-response-status")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<Map<Integer, List<Boolean>>> weeklySummaryResponseStatus (@RequestParam final Long studentId) {
-        return new ResponseEntity<Map<Integer, List<Boolean>>>(this.taskService.weeklySummaryResponseStatus(studentId), HttpStatus.OK);
+    public ResponseEntity<Map<Integer, boolean[]>> weeklySummaryResponseStatus (@RequestParam final Long studentId) {
+        return new ResponseEntity<Map<Integer, boolean[]>>(this.taskService.weeklySummaryResponseStatus(studentId), HttpStatus.OK);
     }
 
     @PutMapping("/weekly-summary-response")

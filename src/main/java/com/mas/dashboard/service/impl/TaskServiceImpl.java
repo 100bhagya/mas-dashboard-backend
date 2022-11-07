@@ -8,11 +8,9 @@ import com.mas.dashboard.repository.TaskRatingRepository;
 import com.mas.dashboard.repository.WeeklySummaryRepository;
 import com.mas.dashboard.repository.WeeklySummaryResponseRepository;
 import com.mas.dashboard.service.TaskService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Tuple;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -128,15 +126,6 @@ public class TaskServiceImpl implements TaskService {
     return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
-  public Map<Date, Boolean> checkDailyWordsCompletedStatus (final Date fromDate, final Date toDate, final Long studentId) {
-    final List<Tuple> tuples = this.dailyWordsResponseRepository.checkCompletedStatusByStudentIdAndDate(fromDate, toDate, studentId);
-    Map<Date, Boolean> dateCompletedStatusMap = new HashMap<>();
-    tuples.forEach(tuple -> {
-      dateCompletedStatusMap.put((Date) tuple.get("date"), (Boolean) tuple.get("completed"));
-    });
-    return dateCompletedStatusMap;
-  }
-
   //    Date -> {partialComplete, completed}
   //    {false, false} -> No Response, {true, false} -> One Response only, {true, true} -> Both response
   public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate, final Long studentId) {
@@ -202,22 +191,6 @@ public class TaskServiceImpl implements TaskService {
     return optionalWeeklySummary.get();
   }
 
-//  public List<WeeklySummary> getAllWeeklySummary(){
-//    final List<WeeklySummary> allWeeklySummary = this.weeklySummaryRepository.findAll();
-//    if(allWeeklySummary.size() == 0){
-//      throw new IllegalArgumentException("No weekly summary found!");
-//    }
-//    return allWeeklySummary;
-//  }
-//
-//  public List<WeeklySummary> getWeeklySummaryByWeek(final Integer weekNumber){
-//    final List<WeeklySummary> Summary = this.weeklySummaryRepository.findByWeekNumber(weekNumber);
-//    if(Summary.size() == 0){
-//      throw new IllegalArgumentException("No weekly summary found for given week!");
-//    }
-//    return Summary;
-//  }
-
   public WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
     final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.
             findByStudentIdAndWeeklySummaryId(weeklySummaryResponseDto.getStudentId(), weeklySummaryResponseDto.getWeeklySummaryId());
@@ -248,76 +221,21 @@ public class TaskServiceImpl implements TaskService {
     return optionalWeeklySummaryResponse.get();
   }
 
-  //returns list {weekNo, articleNo, completed} for studentId provided
-//  public List<List<Object>> weeklySummaryResponseStatus(Long studentId) {
-//    final List<WeeklySummary> allWeeklySummary = this.weeklySummaryRepository.findAll();
-//    List<List<Object>> weeklySummaryResponseStatus = new ArrayList<>();
-//    allWeeklySummary.forEach(weeklySummary -> {
-//      final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, weeklySummary.getId());
-//      if(!optionalWeeklySummaryResponse.isPresent()){
-//        List<Object> al = new ArrayList<>();
-//        al.add(weeklySummary.getWeekNumber());
-//        al.add(weeklySummary.getArticleNumber());
-//        al.add(false);
-//        weeklySummaryResponseStatus.add(al);
-//      }else{
-//        List<Object> al = new ArrayList<>();
-//        al.add(weeklySummary.getWeekNumber());
-//        al.add(weeklySummary.getArticleNumber());
-//        al.add(optionalWeeklySummaryResponse.get().getCompleted());
-//        weeklySummaryResponseStatus.add(al);
-//      }
-//    });
-//    return weeklySummaryResponseStatus;
-//  }
-
-//  Todo: Optimise this endpoint
-  public Map<Integer, List<Boolean>> weeklySummaryResponseStatus(Long studentId) {
-    Map<Integer, List<Boolean>> res = new HashMap<>();
-    for(int i=1; i<=24; i++){
-      final List<WeeklySummary> Summary = this.weeklySummaryRepository.findByWeekNumber(i);
-      if(Summary.size() == 0){
-        List<Boolean> al = new ArrayList<>();
-        al.add(false);
-        al.add(false);
-        res.put(i, al);
-      }
-      else if(Summary.size() == 1) {
-        final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, Summary.get(0).getId());
-        if(! optionalWeeklySummaryResponse.isPresent()){
-          List<Boolean> al = new ArrayList<>();
-          al.add(false);
-          al.add(false);
-          res.put(i, al);
-        }else{
-          int articleNumber = Summary.get(0).getArticleNumber() - 1;
-          List<Boolean> al = new ArrayList<>();
-          if(articleNumber == 0){
-            al.add(optionalWeeklySummaryResponse.get().getCompleted());
-            al.add(false);
-            res.put(i, al);
-          }else{
-            al.add(false);
-            al.add(optionalWeeklySummaryResponse.get().getCompleted());
-            res.put(i, al);
-          }
-        }
-      }
-      else{
-        List<Boolean> al = new ArrayList<>();
-        Summary.forEach(weeklySummary -> {
-          final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, weeklySummary.getId());
-          if(!optionalWeeklySummaryResponse.isPresent()){
-            al.add(false);
-          }else{
-            al.add(optionalWeeklySummaryResponse.get().getCompleted());
-          }
-        });
-        res.put(i, al);
-      }
-    }
-    return res;
+//  returns Map as [weekNo -> {article1CompleteStatus, article2CompleteStatus}]
+  public Map<Integer,boolean[]> weeklySummaryResponseStatus(Long studentId) {
+    List<WeeklySummaryResponse> weeklySummaryResponseList = this.weeklySummaryResponseRepository.findByStudentIdAndCompleted(studentId, true);
+    Map<Integer, boolean[]> mapOfWeekNoArticleStatus = new HashMap<>();
+    weeklySummaryResponseList.forEach( weeklySummaryResponse -> {
+      Optional<WeeklySummary> weeklySummary = this.weeklySummaryRepository.findById(weeklySummaryResponse.getWeeklySummaryId());
+      int weekNo = weeklySummary.get().getWeekNumber();
+      int articleNo = weeklySummary.get().getArticleNumber();
+      boolean[] arr = mapOfWeekNoArticleStatus.getOrDefault(weekNo, new boolean[2]);
+      arr[articleNo - 1] = true;
+      mapOfWeekNoArticleStatus.put(weekNo, arr);
+    });
+    return mapOfWeekNoArticleStatus;
   }
+
 
   public WeeklySummaryResponse updateWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto) {
     final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(weeklySummaryResponseDto.getStudentId(),

@@ -25,11 +25,7 @@ public interface TaskService {
 
   WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber);
 
-//  List<WeeklySummary> getAllWeeklySummary();
-//
-//  List<WeeklySummary> getWeeklySummaryByWeek(Integer weekNumber);
-
-  Map<Integer, List<Boolean>> weeklySummaryResponseStatus(final Long StudentId);
+  Map<Integer, boolean[]> weeklySummaryResponseStatus(final Long StudentId);
 
   WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto);
 
