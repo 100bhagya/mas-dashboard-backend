@@ -7,9 +7,14 @@ import com.mas.dashboard.repository.DailyWordsResponseRepository;
 import com.mas.dashboard.repository.TaskRatingRepository;
 import com.mas.dashboard.repository.WeeklySummaryRepository;
 import com.mas.dashboard.repository.WeeklySummaryResponseRepository;
+import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,6 +37,22 @@ public class TaskServiceImpl implements TaskService {
   @Autowired
   private TaskRatingRepository taskRatingRepository;
 
+  // To get user id of logged-in user
+
+  public AppUserDetailsImpl getLoggedInUser() {
+    SecurityContext context = SecurityContextHolder.getContext();
+
+    if (context == null) {
+      return null;
+    }
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth == null) {
+      return null;
+    }
+    AppUserDetailsImpl loggedInUser = (AppUserDetailsImpl)auth.getPrincipal();
+    return loggedInUser;
+  }
+
   String GD = "GD";
 
   public List<DailyWords> saveDailyWords(List<DailyWordsDto> dailyWordsRequestList) {
@@ -48,6 +69,9 @@ public class TaskServiceImpl implements TaskService {
       if (optionalDailyWords.isPresent()) {
         throw new IllegalArgumentException("Daily words for the given date already exist");
       }
+
+      AppUserDetailsImpl loggedInUser = getLoggedInUser();
+
       // Todo: Implement a mapper
       // DailyWords dailyWords = DAILY_WORDS_MAPPER.toDailyWordsEntity(e);
       DailyWords dailyWords = new DailyWords();
@@ -58,9 +82,9 @@ public class TaskServiceImpl implements TaskService {
       dailyWords.setWordTwoCat(e.getWordTwoCat());
       dailyWords.setWordTwoMeaning(e.getWordTwoMeaning());
       dailyWords.setDate(date);
-      dailyWords.setCreatedBy(-1L);
+      dailyWords.setCreatedBy(loggedInUser.getId());
       dailyWords.setCreatedDate(new Date());
-      dailyWords.setUpdatedBy(-1L);
+      dailyWords.setUpdatedBy(loggedInUser.getId());
       dailyWords.setUpdatedDate(new Date());
       dailyWordsList.add(dailyWords);
     });
@@ -90,16 +114,17 @@ public class TaskServiceImpl implements TaskService {
     dailyWordsResponse.setCreatedDate(new Date());
     dailyWordsResponse.setUpdatedBy(dailyWordsResponseDto.getStudentId());
     dailyWordsResponse.setUpdatedDate(new Date());
-    if (dailyWordsResponseDto.getResponseOne().isEmpty() || dailyWordsResponseDto.getResponseTwo().isEmpty()) {
-      dailyWordsResponse.setCompleted(Boolean.FALSE);
-    } else {
+    if (!dailyWordsResponseDto.getResponseOne().isEmpty() && !dailyWordsResponseDto.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setCompleted(Boolean.TRUE);
+    } else {
+      dailyWordsResponse.setCompleted(Boolean.FALSE);
     }
     return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
-  public DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordsId) {
-    final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(studentId, dailyWordsId);
+  public DailyWordsResponse getDailyWordsResponse (final Long dailyWordsId) {
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+    final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(loggedInUser.getId(), dailyWordsId);
     if (!optionalDailyWordsResponse.isPresent()) {
       return null;
     }
@@ -109,31 +134,51 @@ public class TaskServiceImpl implements TaskService {
   public DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto) {
     final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(),
             dailyWordsResponseDto.getDailyWordsId());
+
     if (!optionalDailyWordsResponse.isPresent()) {
       throw new IllegalArgumentException("Daily words response not found for the given student and word id");
     }
+
     final DailyWordsResponse dailyWordsResponse = optionalDailyWordsResponse.get();
-    if (!dailyWordsResponseDto.getResponseOne().isEmpty()) {
+
+    if(dailyWordsResponseDto.getResponseOne().isEmpty() && dailyWordsResponseDto.getResponseTwo().isEmpty()){
+      this.dailyWordsResponseRepository.deleteById(dailyWordsResponse.getId());
+//      throw new IllegalArgumentException("Response deleted successfully");
+      return null;
+    }else{
       dailyWordsResponse.setResponseOne(dailyWordsResponseDto.getResponseOne());
-    }
-    if (!dailyWordsResponseDto.getResponseTwo().isEmpty()) {
       dailyWordsResponse.setResponseTwo(dailyWordsResponseDto.getResponseTwo());
+
+      final Optional<DailyWordsResponse> optionalUpdatedDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(dailyWordsResponseDto.getStudentId(),
+              dailyWordsResponseDto.getDailyWordsId());
+      if(!optionalUpdatedDailyWordsResponse.get().getResponseOne().isEmpty() && !optionalUpdatedDailyWordsResponse.get().getResponseTwo().isEmpty() ){
+        dailyWordsResponse.setCompleted(Boolean.TRUE);
+      }else{
+        dailyWordsResponse.setCompleted(Boolean.FALSE);
+      }
+      return this.dailyWordsResponseRepository.save(dailyWordsResponse);
     }
-    if (!dailyWordsResponse.getResponseOne().isEmpty() || !dailyWordsResponse.getResponseTwo().isEmpty()) {
-      dailyWordsResponse.setCompleted(Boolean.TRUE);
-      dailyWordsResponse.setUpdatedDate(new Date());
-    }
-    return this.dailyWordsResponseRepository.save(dailyWordsResponse);
+//    if (!dailyWordsResponseDto.getResponseOne().isEmpty()) {
+//      dailyWordsResponse.setResponseOne(dailyWordsResponseDto.getResponseOne());
+//    }
+//    if (!dailyWordsResponseDto.getResponseTwo().isEmpty()) {
+//      dailyWordsResponse.setResponseTwo(dailyWordsResponseDto.getResponseTwo());
+//    }
+//    if (!dailyWordsResponse.getResponseOne().isEmpty() || !dailyWordsResponse.getResponseTwo().isEmpty()) {
+//      dailyWordsResponse.setCompleted(Boolean.TRUE);
+//      dailyWordsResponse.setUpdatedDate(new Date());
+//    }
+//    return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
   //    Date -> {partialComplete, completed}
   //    {false, false} -> No Response, {true, false} -> One Response only, {true, true} -> Both response
-  public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate, final Long studentId) {
+  public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate) {
     final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(fromDate, toDate);
-
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
     Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>();
     DailyWordTuples.forEach(tuple -> {
-      final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(studentId, tuple.getId());
+      final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(loggedInUser.getId(), tuple.getId());
       if(optionalDailyWordsResponse.isPresent()){
         List<Boolean> al = new ArrayList<>();
         al.add(true);
@@ -167,6 +212,9 @@ public class TaskServiceImpl implements TaskService {
     if (optionalWeeklySummary.isPresent() ) {
       throw new IllegalArgumentException("Weekly summary already exists for the given week");
     }
+
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+
     final WeeklySummary weeklySummary = new WeeklySummary();
     weeklySummary.setArticleTopic(weeklySummaryDto.getArticleTopic());
     weeklySummary.setArticleText(weeklySummaryDto.getArticleText());
@@ -175,9 +223,9 @@ public class TaskServiceImpl implements TaskService {
     weeklySummary.setReadTime(weeklySummaryDto.getReadTime());
     weeklySummary.setWeekNumber(weeklySummaryDto.getWeekNumber());
     weeklySummary.setArticleNumber(weeklySummaryDto.getArticleNumber());
-    weeklySummary.setCreatedBy(-1L);
+    weeklySummary.setCreatedBy(loggedInUser.getId());
     weeklySummary.setCreatedDate(new Date());
-    weeklySummary.setUpdatedBy(-1L);
+    weeklySummary.setUpdatedBy(loggedInUser.getId());
     weeklySummary.setUpdatedDate(new Date());
     return this.weeklySummaryRepository.save(weeklySummary);
   }
@@ -213,8 +261,9 @@ public class TaskServiceImpl implements TaskService {
     return this.weeklySummaryResponseRepository.save(weeklySummaryResponse);
   }
 
-  public WeeklySummaryResponse getWeeklySummaryResponse (final Long studentId, final Long weeklySummaryId) {
-    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(studentId, weeklySummaryId);
+  public WeeklySummaryResponse getWeeklySummaryResponse (final Long weeklySummaryId) {
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+    final Optional<WeeklySummaryResponse> optionalWeeklySummaryResponse = this.weeklySummaryResponseRepository.findByStudentIdAndWeeklySummaryId(loggedInUser.getId(), weeklySummaryId);
     if (!optionalWeeklySummaryResponse.isPresent()) {
       return null;
     }
@@ -222,8 +271,9 @@ public class TaskServiceImpl implements TaskService {
   }
 
 //  returns Map as [weekNo -> {article1CompleteStatus, article2CompleteStatus}]
-  public Map<Integer,boolean[]> weeklySummaryResponseStatus(Long studentId) {
-    List<WeeklySummaryResponse> weeklySummaryResponseList = this.weeklySummaryResponseRepository.findByStudentIdAndCompleted(studentId, true);
+  public Map<Integer,boolean[]> weeklySummaryResponseStatus() {
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+    List<WeeklySummaryResponse> weeklySummaryResponseList = this.weeklySummaryResponseRepository.findByStudentIdAndCompleted(loggedInUser.getId(), true);
     Map<Integer, boolean[]> mapOfWeekNoArticleStatus = new HashMap<>();
     weeklySummaryResponseList.forEach( weeklySummaryResponse -> {
       Optional<WeeklySummary> weeklySummary = this.weeklySummaryRepository.findById(weeklySummaryResponse.getWeeklySummaryId());
@@ -274,9 +324,10 @@ public class TaskServiceImpl implements TaskService {
     return this.taskRatingRepository.save(taskRating);
   }
 
-  public List<TaskRating> getAllTaskRating (final Long studentId, final String category) {
+  public List<TaskRating> getAllTaskRating (final String category) {
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
     // TODO: Make category an enum
-    List<TaskRating> taskRatingList = this.taskRatingRepository.findAllByStudentIdAndCategory(studentId, category);
+    List<TaskRating> taskRatingList = this.taskRatingRepository.findAllByStudentIdAndCategory(loggedInUser.getId(), category);
     if (taskRatingList.size() == 0) {
       throw new IllegalArgumentException("Task rating not found for the given student id and category");
     }

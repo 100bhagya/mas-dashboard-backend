@@ -15,27 +15,27 @@ public interface TaskService {
 
   DailyWordsResponse saveDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
-  DailyWordsResponse getDailyWordsResponse (final Long studentId, final Long dailyWordId);
+  DailyWordsResponse getDailyWordsResponse (final Long dailyWordId);
 
   DailyWordsResponse updateDailyWordsResponse (final DailyWordsResponseDto dailyWordsResponseDto);
 
-  Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate, final Long studentId);
+  Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate);
 
   WeeklySummary saveWeeklySummary (final WeeklySummaryDto weeklySummaryDto);
 
   WeeklySummary getWeeklySummary (final Integer weekNumber, final Integer articleNumber);
 
-  Map<Integer, boolean[]> weeklySummaryResponseStatus(final Long StudentId);
+  Map<Integer, boolean[]> weeklySummaryResponseStatus();
 
   WeeklySummaryResponse saveWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto);
 
-  WeeklySummaryResponse getWeeklySummaryResponse (final Long studentId, final Long weeklySummaryId);
+  WeeklySummaryResponse getWeeklySummaryResponse (final Long weeklySummaryId);
 
   WeeklySummaryResponse updateWeeklySummaryResponse (final WeeklySummaryResponseDto weeklySummaryResponseDto);
 
   TaskRating createTaskRating (final TaskRatingDto taskRatingDto);
 
-  List<TaskRating> getAllTaskRating (final Long studentId, final String category);
+  List<TaskRating> getAllTaskRating (final String category);
 
   TaskRating updateTaskRating (final TaskRatingDto taskRatingDto);
 }
