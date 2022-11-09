@@ -143,7 +143,6 @@ public class TaskServiceImpl implements TaskService {
 
     if(dailyWordsResponseDto.getResponseOne().isEmpty() && dailyWordsResponseDto.getResponseTwo().isEmpty()){
       this.dailyWordsResponseRepository.deleteById(dailyWordsResponse.getId());
-//      throw new IllegalArgumentException("Response deleted successfully");
       return null;
     }else{
       dailyWordsResponse.setResponseOne(dailyWordsResponseDto.getResponseOne());
@@ -158,17 +157,6 @@ public class TaskServiceImpl implements TaskService {
       }
       return this.dailyWordsResponseRepository.save(dailyWordsResponse);
     }
-//    if (!dailyWordsResponseDto.getResponseOne().isEmpty()) {
-//      dailyWordsResponse.setResponseOne(dailyWordsResponseDto.getResponseOne());
-//    }
-//    if (!dailyWordsResponseDto.getResponseTwo().isEmpty()) {
-//      dailyWordsResponse.setResponseTwo(dailyWordsResponseDto.getResponseTwo());
-//    }
-//    if (!dailyWordsResponse.getResponseOne().isEmpty() || !dailyWordsResponse.getResponseTwo().isEmpty()) {
-//      dailyWordsResponse.setCompleted(Boolean.TRUE);
-//      dailyWordsResponse.setUpdatedDate(new Date());
-//    }
-//    return this.dailyWordsResponseRepository.save(dailyWordsResponse);
   }
 
   //    Date -> {partialComplete, completed}
