@@ -24,8 +24,8 @@ spring:
     change-log: classpath:db/db-changelog-master.yaml
   mail:
     host: smtp.gmail.com
-    username: jaditya8109@gmail.com
-    password: plpszwlbfrhcfzfp
+    username: gauravsaubhagya3@gmail.com
+    password: ssxvgmehukmvlmti
     port: 587
     properties:
       mail:

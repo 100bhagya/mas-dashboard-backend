@@ -16,4 +16,6 @@ public interface WeeklySummaryResponseRepository extends JpaRepository<WeeklySum
 
     Optional<WeeklySummaryResponse> findByStudentIdAndWeeklySummaryId (final Long studentId, final Long weeklySummaryId);
 
+    List<WeeklySummaryResponse> findByStudentIdAndCompleted(final Long studentId, Boolean completed);
+
 }
