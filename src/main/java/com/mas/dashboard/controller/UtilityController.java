@@ -1,8 +1,11 @@
 package com.mas.dashboard.controller;
 
+import com.mas.dashboard.entity.MasterPassword;
 import com.mas.dashboard.payload.request.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,10 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -41,6 +41,12 @@ public class UtilityController {
 
     @Autowired
     AppUserRepository appUserRepository;
+
+    @Autowired
+    MasterPassword masterPassword;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @GetMapping("/getUserProfile")
     public Map<String, Object> getUser() {
@@ -93,6 +99,27 @@ public class UtilityController {
         this.appUserRepository.save(user);
 
         return "Your profile has been updated successfully";
+    }
+
+    @GetMapping("/generateMasterPassword")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String generateMasterPassword(){
+        String token = UUID.randomUUID().toString();
+        masterPassword.setMasterPassword(token);
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("gauravsaubhagya3@gmail.com");
+        message.setTo("jaditya8109@gmail.com");
+        message.setSubject("MAS Dashboard: Master Password");
+        message.setText("Master Password = " + masterPassword.getMasterPassword());
+        javaMailSender.send(message);
+        return "Master password generated and sent to Admin email";
+    }
+
+    @GetMapping("/getMasterPassword")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String getMasterPassword(){
+        return masterPassword.getMasterPassword();
     }
 
 }
