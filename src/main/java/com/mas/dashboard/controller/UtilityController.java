@@ -109,7 +109,7 @@ public class UtilityController {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("gauravsaubhagya3@gmail.com");
-        message.setTo("jaditya8109@gmail.com");
+        message.setTo("gauravsaubhagya3@gmail.com");
         message.setSubject("MAS Dashboard: Master Password");
         message.setText("Master Password = " + masterPassword.getMasterPassword());
         javaMailSender.send(message);
