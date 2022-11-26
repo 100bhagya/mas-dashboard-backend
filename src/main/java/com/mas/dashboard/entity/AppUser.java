@@ -60,6 +60,12 @@ public class AppUser {
 
   private Boolean deleted;
 
+  private Long courseId;
+
+  private String year;
+
+  private String rollNo;
+
   @Temporal(TemporalType.TIMESTAMP)
   @Column(nullable = false, updatable = false)
   @CreatedDate
@@ -185,4 +191,16 @@ public class AppUser {
   public void setCreatedBy(Long createdBy) {this.createdBy = createdBy; }
 
   public void setUpdatedBy(Long updatedBy) {this.updatedBy = updatedBy; }
+
+  public Long getCourseId() {return courseId; }
+
+  public void setCourseId(Long courseId) {this.courseId = courseId; }
+
+  public String getRollNo() {return rollNo; }
+
+  public void setRollNo(String rollNo) {this.rollNo = rollNo; }
+
+  public String getYear() {return year; }
+
+  public void setYear(String year) {this.year = year; }
 }

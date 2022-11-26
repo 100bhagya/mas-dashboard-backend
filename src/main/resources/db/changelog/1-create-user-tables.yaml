@@ -53,6 +53,15 @@ databaseChangeLog:
                   name: deleted
                   type: BOOLEAN
               - column:
+                  name: course_id
+                  type: BIGSERIAL
+              - column:
+                  name: year
+                  type: VARCHAR
+              - column:
+                  name: roll_no
+                  type: VARCHAR
+              - column:
                   constraints:
                     nullable: false
                   name: created_by
