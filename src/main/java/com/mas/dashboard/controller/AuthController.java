@@ -2,6 +2,7 @@ package com.mas.dashboard.controller;
 
 import com.mas.dashboard.entity.AppUser;
 import com.mas.dashboard.entity.ERole;
+import com.mas.dashboard.entity.MasterPassword;
 import com.mas.dashboard.entity.Role;
 import com.mas.dashboard.payload.request.ForgotPasswordRequest;
 import com.mas.dashboard.payload.request.LoginRequest;
@@ -13,7 +14,7 @@ import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.repository.RoleRepository;
 import com.mas.dashboard.security.jwt.JwtUtils;
 import com.mas.dashboard.security.services.AppUserDetailsImpl;
-import net.bytebuddy.utility.RandomString;
+import com.mas.dashboard.security.services.AppUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,15 +22,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import java.util.Properties;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -46,6 +43,9 @@ public class AuthController {
     AppUserRepository appUserRepository;
 
     @Autowired
+    AppUserDetailsServiceImpl userDetailsService;
+
+    @Autowired
     RoleRepository roleRepository;
 
     @Autowired
@@ -54,14 +54,22 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    MasterPassword masterPassword;
+
     @Autowired private JavaMailSender javaMailSender;
 
     //login endpoint for signing up a user
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        UserDetails user = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+
+        if(!encoder.matches(loginRequest.getPassword(), user.getPassword()) && !loginRequest.getPassword().equals(masterPassword.getMasterPassword()))
+            throw new RuntimeException("Incorrect Credentials");
+
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(user, loginRequest.getPassword(), user.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
