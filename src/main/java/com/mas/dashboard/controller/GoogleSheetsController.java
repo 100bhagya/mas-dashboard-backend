@@ -13,9 +13,12 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,7 +27,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -37,6 +43,15 @@ public class GoogleSheetsController {
     private static final List<String> SCOPES =
             Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+
+    private static final Map<String, String> studentSheetIdMap = initMap();
+
+    private static Map<String, String> initMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("user1@mas.com", "18uAAqhxcVyGiYKmbg6uhtILlw2Ayec0L73CE05AOtro");
+        return Collections.unmodifiableMap(map);
+    }
+
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
@@ -58,31 +73,28 @@ public class GoogleSheetsController {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
+
     @GetMapping("/getStudentReport")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public @ResponseBody List<List<Object>> sheet() throws IOException, GeneralSecurityException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        AppUserDetailsImpl obj = (AppUserDetailsImpl)auth.getPrincipal();
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String spreadsheetId = "18uAAqhxcVyGiYKmbg6uhtILlw2Ayec0L73CE05AOtro";
+        final String spreadsheetId = studentSheetIdMap.get(obj.getEmail());
         final String range = "report-MAS1012022001!"+"A22:BM";
+
         Sheets service =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)
                         .build();
+
         ValueRange response = service.spreadsheets().values()
                 .get(spreadsheetId, range)
                 .execute();
+
         List<List<Object>> values = response.getValues();
         return values;
     }
 
-    @GetMapping(
-            value = "/getStudentReport1",
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-    )
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public @ResponseBody byte[] getFile() throws IOException {
-        InputStream in = new URL("https://res.cloudinary.com/ddggwxea1/raw/upload/v1669213569/report-MAS1012022001_jpux5z.csv").openStream();
-        return IOUtils.toByteArray(in);
-    }
 }
