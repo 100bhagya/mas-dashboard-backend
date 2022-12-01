@@ -50,6 +50,15 @@ databaseChangeLog:
                   name: password_reset_token
                   type: VARCHAR
               - column:
+                  name: course_id
+                  type: BIGSERIAL
+              - column:
+                  name: year
+                  type: VARCHAR
+              - column:
+                  name: roll_no
+                  type: VARCHAR
+              - column:
                   name: deleted
                   type: BOOLEAN
               - column:
@@ -91,4 +100,3 @@ databaseChangeLog:
                   name: name
                   type: VARCHAR
             tableName: role
-
