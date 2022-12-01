@@ -76,13 +76,34 @@ public class GoogleSheetsController {
 
     @GetMapping("/getStudentReport")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public @ResponseBody List<List<Object>> sheet() throws IOException, GeneralSecurityException {
+    public @ResponseBody List<List<Object>> getStudentReport() throws IOException, GeneralSecurityException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUserDetailsImpl obj = (AppUserDetailsImpl)auth.getPrincipal();
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = studentSheetIdMap.get(obj.getEmail());
         final String range = "report-MAS1012022001!"+"A22:BM";
+
+        Sheets service =
+                new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                        .setApplicationName(APPLICATION_NAME)
+                        .build();
+
+        ValueRange response = service.spreadsheets().values()
+                .get(spreadsheetId, range)
+                .execute();
+
+        List<List<Object>> values = response.getValues();
+        return values;
+    }
+
+    @GetMapping("/getLeaderboard")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public @ResponseBody List<List<Object>> getLeaderboard() throws IOException, GeneralSecurityException {
+        // Build a new authorized API client service.
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        final String spreadsheetId = "1oPBnbKCKKTCQVNYTI7I3msFi_n-MaYBQYVC9dpPFiQw";
+        final String range = "Total Score!"+"A3:D102";
 
         Sheets service =
                 new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
