@@ -60,9 +60,9 @@ public class AppUser {
 
   private Boolean deleted;
 
-  private Long courseId;
+  private String courseId;
 
-  private String year;
+  private int year;
 
   private String rollNo;
 
@@ -98,6 +98,8 @@ public class AppUser {
     this.email = email;
     this.password = password;
     this.deleted = deleted;
+    this.courseId = "MAS101";
+    this.year = 2023;
   }
 
   public Long getId() {
@@ -192,11 +194,11 @@ public class AppUser {
 
   public void setUpdatedBy(Long updatedBy) {this.updatedBy = updatedBy; }
 
-  public void setCourseId(Long courseId) {
+  public void setCourseId(String courseId) {
     this.courseId = courseId;
   }
 
-  public Long getCourseId() {
+  public String getCourseId() {
     return courseId;
   }
 
@@ -208,11 +210,12 @@ public class AppUser {
     return rollNo;
   }
 
-  public void setYear(String year) {
+  public void setYear(int year) {
     this.year = year;
   }
 
-  public String getYear() {
+  public int getYear() {
     return year;
   }
+
 }

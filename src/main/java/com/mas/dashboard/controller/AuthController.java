@@ -124,6 +124,7 @@ public class AuthController {
         allowedEmails.add("saubhagya.gaurav.che16@itbhu.ac.in");
         allowedEmails.add("sahupawan9749568594@gmail.com");
         allowedEmails.add("tusharnath10@gmail.com");
+        allowedEmails.add("shubhamaryan1234@gmail.com");
 
         if (strRoles == null) {
             throw new RuntimeException("Error: Role is not found.");
