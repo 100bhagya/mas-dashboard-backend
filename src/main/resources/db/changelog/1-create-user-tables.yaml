@@ -51,10 +51,10 @@ databaseChangeLog:
                   type: VARCHAR
               - column:
                   name: course_id
-                  type: BIGSERIAL
+                  type: VARCHAR
               - column:
                   name: year
-                  type: VARCHAR
+                  type: INTEGER
               - column:
                   name: roll_no
                   type: VARCHAR
