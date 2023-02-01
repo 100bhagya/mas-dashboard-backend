@@ -107,8 +107,6 @@ public class AuthController {
                 encoder.encode(signUpRequest.getPassword()),
                 Boolean.FALSE);
 
-
-
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -122,9 +120,10 @@ public class AuthController {
         allowedEmails.add("user6@mas.com");
         allowedEmails.add("user7@mas.com");
         allowedEmails.add("saubhagya.gaurav.che16@itbhu.ac.in");
-        allowedEmails.add("sahupawan9749568594@gmail.com");
-        allowedEmails.add("tusharnath10@gmail.com");
         allowedEmails.add("shubhamaryan1234@gmail.com");
+        allowedEmails.add("harikeshkrsingh20@gmail.com");
+        allowedEmails.add("gauravsaubhagya3@gmail.com");
+        allowedEmails.add("admin@myanalyticsschool.com");
 
         if (strRoles == null) {
             throw new RuntimeException("Error: Role is not found.");
