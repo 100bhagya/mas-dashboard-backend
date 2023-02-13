@@ -6,4 +6,4 @@ databaseChangeLog:
   - include:
       file: classpath:db/changelog/3-create-weekly-summary-tables.yaml
   - include:
-      file: classpath:db/changelog/4-create-ratings-table.yaml
+       file: classpath:db/changelog/4-create-ratings-table.yaml

@@ -6,6 +6,7 @@ spring:
     name: dashboard-application-service
   datasource:
     url: jdbc:postgresql://localhost:5432/dashboard_db
+#    url: jdbc:postgresql://database-instance.cslzeauidjaw.ap-south-1.rds.amazonaws.com:5432/database_db_aws
     username: postgres
     password: postgres.123
     initialization-mode: always
