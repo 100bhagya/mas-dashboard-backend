@@ -46,3 +46,5 @@ databaseChangeLog:
                   name: marks_final
                   type: INTEGER
             tableName: students_data
+
+
