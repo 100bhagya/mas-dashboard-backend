@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: SG1
+      author: Harikesh
+      comment: Create leaderboard data table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: leaderboard_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: student_name
+                  type: VARCHAR
+              - column:
+                  name: total_marks
+                  type: INTEGER
+              - column:
+                  name: rank
+                  type: INTEGER
+              - column:
+                  name: roll_number
+                  type: VARCHAR
+            tableName: leaderboard_data
