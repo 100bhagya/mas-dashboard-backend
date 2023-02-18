@@ -47,4 +47,3 @@ databaseChangeLog:
                   type: INTEGER
             tableName: students_data
 
-
