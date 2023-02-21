@@ -45,7 +45,7 @@ public class StudentDataController {
 
     @GetMapping("/data")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<StudentData> getAllStudentData() {
+    public ResponseEntity<List<StudentData>> getAllStudentData() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AppUserDetailsImpl loggedInUser = (AppUserDetailsImpl)auth.getPrincipal();
 
@@ -55,8 +55,7 @@ public class StudentDataController {
         }
 
         final AppUser user =  optionalAppUser.get();
-
-        return this.studentService.getAllStudentsData(user.getRollNo());
+return ResponseEntity.ok(this.studentService.getAllStudentsData(user.getRollNo()));
     }
 
 }

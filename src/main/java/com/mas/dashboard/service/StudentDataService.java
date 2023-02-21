@@ -30,7 +30,6 @@ public class StudentDataService {
     }
 
     public List<StudentData> getAllStudentsData(String userRollNo){
-System.out.println( userRollNo);
         return this.studentRepo.findAll().stream()
                 .filter(test -> test.getRollNumber().equals(userRollNo))
                 .collect(Collectors.toList());
