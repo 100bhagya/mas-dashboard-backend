@@ -32,6 +32,8 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.aspectj.bridge.MessageUtil.print;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -83,6 +85,7 @@ public class AuthController {
                 appUserDetails.getId(),
                 appUserDetails.getUsername(),
                 appUserDetails.getEmail(),
+                appUserRepository.getById(appUserDetails.getId()).getRollNo(),
                 roles));
     }
 
