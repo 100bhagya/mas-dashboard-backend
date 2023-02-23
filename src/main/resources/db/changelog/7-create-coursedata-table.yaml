@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: SG1
+      author: Harikesh
+      comment: Create course  data table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: coursedata_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: course_name
+                  type: VARCHAR
+              - column:
+                  name: student_name
+                  type: VARCHAR
+              - column:
+                  name: email
+                  type: VARCHAR
+              - column:
+                  name: time_spent_mins
+                  type: INTEGER
+              - column:
+                  name: time_spent_hours
+                  type: Double
+              - column:
+                  name: progress
+                  type: INTEGER
+              - column:
+                  name: roll_number
+                  type: VARCHAR
+            tableName: course_data

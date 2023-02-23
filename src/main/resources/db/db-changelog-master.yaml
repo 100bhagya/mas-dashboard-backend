@@ -11,4 +11,6 @@ databaseChangeLog:
        file: classpath:db/changelog/5-create-students-data-table.yaml
   - include:
       file: classpath:db/changelog/6-create-leaderboard-data-table.yaml
+  - include:
+      file: classpath:db/changelog/7-create-coursedata-table.yaml
 
