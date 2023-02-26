@@ -113,14 +113,12 @@ public class TaskController {
     @PostMapping("task-rating")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<TaskRating> createTaskRating (@RequestBody final TaskRatingDto taskRatingDto) {
-        System.out.println(taskRatingDto);
         return new ResponseEntity<>(this.taskService.createTaskRating(taskRatingDto), HttpStatus.CREATED);
     }
 
     @GetMapping("task-rating")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<List<TaskRating>> getTaskRating (@RequestParam final String category) {
-System.out.println(this.taskService.getAllTaskRating(category));
         return new ResponseEntity<>(this.taskService.getAllTaskRating(category), HttpStatus.OK);
     }
 
