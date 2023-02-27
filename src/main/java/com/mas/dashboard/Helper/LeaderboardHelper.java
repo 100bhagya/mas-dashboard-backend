@@ -42,17 +42,14 @@ public class LeaderboardHelper {
                     continue;
                 }
                 Iterator<Cell> cells = row.iterator();
-                int cellId =0;
+                int cellId =1;
                 Leaderboard data = new Leaderboard();
 
                 while (cells.hasNext()){
                     Cell cell = cells.next();
                     switch (cellId){
-                        case 0:
-                            data.setId((long) cell.getNumericCellValue()) ;
-                            break;
                         case 1:
-                            data.setStudentName( cell.getStringCellValue());
+                            data.setStudentName(cell.getStringCellValue());
                             break;
                         case 2:
                             data.setTotalMarks((int) cell.getNumericCellValue());
@@ -65,12 +62,8 @@ public class LeaderboardHelper {
                             break;
                         default:
                             break;
-
-
-
-
-
                     }
+
 
                     cellId++;
 

@@ -7,6 +7,7 @@ import java.util.Date;
 @Table(name = "students_data")
 public class StudentData {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String rollNumber;

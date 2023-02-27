@@ -8,9 +8,9 @@ databaseChangeLog:
   - include:
        file: classpath:db/changelog/4-create-ratings-table.yaml
   - include:
-       file: classpath:db/changelog/5-create-students-data-table.yaml
+       file: classpath:db/changelog/5-create-studentsdata-tables.yaml
   - include:
-      file: classpath:db/changelog/6-create-leaderboard-data-table.yaml
+      file: classpath:db/changelog/6-create-leaderboard-data-tables.yaml
   - include:
-      file: classpath:db/changelog/7-create-coursedata-table.yaml
+      file: classpath:db/changelog/7-create-coursedata-tables.yaml
 

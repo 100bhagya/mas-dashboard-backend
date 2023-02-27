@@ -42,15 +42,12 @@ public class StudentsDataHelper {
                     continue;
                 }
                 Iterator<Cell> cells = row.iterator();
-                int cellId =0;
+                int cellId =1;
                 StudentData data = new StudentData();
 
                 while (cells.hasNext()){
                     Cell cell = cells.next();
                     switch (cellId){
-                        case 0:
-                            data.setId((long) cell.getNumericCellValue()) ;
-                            break;
                         case 1:
                             data.setRollNumber( cell.getStringCellValue());
                             break;

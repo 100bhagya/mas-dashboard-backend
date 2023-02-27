@@ -41,15 +41,12 @@ public class CourseDataHelper {
                     continue;
                 }
                 Iterator<Cell> cells = row.iterator();
-                int cellId =0;
+                int cellId =1;
                 CourseData data = new CourseData();
 
                 while (cells.hasNext()){
                     Cell cell = cells.next();
                     switch (cellId){
-                        case 0:
-                            data.setId((long) cell.getNumericCellValue()) ;
-                            break;
                         case 1:
                             data.setCourseName( cell.getStringCellValue());
                             break;
@@ -73,10 +70,6 @@ public class CourseDataHelper {
                             break;
                         default:
                             break;
-
-
-
-
 
                     }
 
