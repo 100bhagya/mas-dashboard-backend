@@ -3,6 +3,7 @@ package com.mas.dashboard.Helper;
 import com.mas.dashboard.entity.CourseData;
 import com.mas.dashboard.entity.Leaderboard;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -43,6 +44,13 @@ public class CourseDataHelper {
                 Iterator<Cell> cells = row.iterator();
                 int cellId =1;
                 CourseData data = new CourseData();
+
+                //check for empty cell
+
+                Cell rowCell = row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                if (rowCell == null || rowCell.getCellType() == CellType.BLANK){
+                    break;
+                }
 
                 while (cells.hasNext()){
                     Cell cell = cells.next();

@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.poi.ss.usermodel.CellType;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,10 +33,12 @@ public class LeaderboardHelper {
             XSSFSheet sheet = workbook.getSheet("Leaderboard");
 
             int rowNumber = 0;
+
             Iterator<Row> iterator = sheet.iterator();
 
             while(iterator.hasNext()){
                 Row row = iterator.next();
+
 
                 if (rowNumber == 0) {
                     rowNumber++;
@@ -43,7 +46,13 @@ public class LeaderboardHelper {
                 }
                 Iterator<Cell> cells = row.iterator();
                 int cellId =1;
-                Leaderboard data = new Leaderboard();
+                //check for empty cell
+                Cell rowCell = row.getCell(3, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                if (rowCell == null || rowCell.getCellType() == CellType.BLANK){
+                    break;
+                }
+
+                    Leaderboard data = new Leaderboard();
 
                 while (cells.hasNext()){
                     Cell cell = cells.next();
@@ -65,11 +74,17 @@ public class LeaderboardHelper {
                     }
 
 
+
+
+
                     cellId++;
 
 
                 }
+
                 list.add(data);
+
+
 
 
             }
