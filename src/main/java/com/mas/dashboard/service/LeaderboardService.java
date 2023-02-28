@@ -17,11 +17,14 @@ import java.util.List;
 public class LeaderboardService {
 
     @Autowired
+    private LeaderboardHelper leaderboardHelper;
+
+    @Autowired
     private LeaderboardRepository leaderboardRepo;
 
     public void  save (MultipartFile file){
         try {
-            List<Leaderboard> leaderboard = LeaderboardHelper.convertExcelToListOfLeaderboard(file.getInputStream());
+            List<Leaderboard> leaderboard = leaderboardHelper.convertExcelToListOfLeaderboard(file.getInputStream());
             this.leaderboardRepo.saveAll(leaderboard);
         } catch (IOException e) {
             throw new RuntimeException(e);

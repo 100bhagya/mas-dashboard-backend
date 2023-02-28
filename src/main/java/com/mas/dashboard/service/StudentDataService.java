@@ -4,6 +4,7 @@ import com.mas.dashboard.Helper.StudentsDataHelper;
 import com.mas.dashboard.entity.StudentData;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.repository.StudentsDataRepository;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentDataService {
+
+    @Autowired
+    private StudentsDataHelper studentsDataHelper;
+
     @Autowired
     private StudentsDataRepository studentRepo;
     @Autowired
@@ -22,7 +27,7 @@ public class StudentDataService {
 
     public void  save (MultipartFile file){
         try {
-            List<StudentData> studentData = StudentsDataHelper.convertExcelToListOfStudentsData(file.getInputStream());
+            List<StudentData> studentData = studentsDataHelper.convertExcelToListOfStudentsData(file.getInputStream());
             this.studentRepo.saveAll(studentData);
         } catch (IOException e) {
             throw new RuntimeException(e);
