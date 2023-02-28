@@ -122,6 +122,9 @@ public class AuthController {
         allowedEmails.add("user5@mas.com");
         allowedEmails.add("user6@mas.com");
         allowedEmails.add("user7@mas.com");
+        allowedEmails.add("user8@mas.com");
+        allowedEmails.add("user9@mas.com");
+        allowedEmails.add("user10@mas.com");
         allowedEmails.add("saubhagya.gaurav.che16@itbhu.ac.in");
         allowedEmails.add("shubhamaryan1234@gmail.com");
         allowedEmails.add("harikeshkrsingh20@gmail.com");

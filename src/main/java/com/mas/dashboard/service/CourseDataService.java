@@ -19,13 +19,15 @@ import java.util.stream.Collectors;
 @Service
 public class CourseDataService {
     @Autowired
+    private CourseDataHelper courseDataHelper;
+    @Autowired
     private CourseDataRepository courseRepo;
     @Autowired
     private AppUserRepository appUserRepository;
 
     public void  save (MultipartFile file){
         try {
-            List<CourseData> courseData = CourseDataHelper.convertExcelToListOfCourseData(file.getInputStream());
+            List<CourseData> courseData = courseDataHelper.convertExcelToListOfCourseData(file.getInputStream());
             this.courseRepo.saveAll(courseData);
         } catch (IOException e) {
             throw new RuntimeException(e);

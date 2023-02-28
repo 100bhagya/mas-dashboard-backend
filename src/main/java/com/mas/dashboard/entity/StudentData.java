@@ -1,12 +1,14 @@
 package com.mas.dashboard.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.Date;
 
 @Entity
 @Table(name = "students_data")
 public class StudentData {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String rollNumber;
@@ -25,8 +27,10 @@ public class StudentData {
 
     private Double percentileFinal;
     private Integer marksFinal;
+    @Email
+    private String Email;
 
-    public StudentData(Long id, String rollNumber, String studentName, Integer totalMarks, Integer rank, Double percentile, Date testDate, String testName, String helper, String recentTestName, Double percentileFinal, Integer marksFinal) {
+    public StudentData(Long id, String rollNumber, String studentName, Integer totalMarks, Integer rank, Double percentile, Date testDate, String testName, String helper, String recentTestName, Double percentileFinal, Integer marksFinal, String email) {
         this.id = id;
         this.rollNumber = rollNumber;
         this.studentName = studentName;
@@ -39,6 +43,7 @@ public class StudentData {
         this.recentTestName = recentTestName;
         this.percentileFinal = percentileFinal;
         this.marksFinal = marksFinal;
+        Email = email;
     }
 
     public StudentData() {
@@ -138,5 +143,13 @@ public class StudentData {
 
     public void setMarksFinal(Integer marksFinal) {
         this.marksFinal = marksFinal;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 }

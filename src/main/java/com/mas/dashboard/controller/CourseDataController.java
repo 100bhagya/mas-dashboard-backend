@@ -9,6 +9,7 @@ import com.mas.dashboard.payload.response.MessageResponse;
 import com.mas.dashboard.repository.AppUserRepository;
 import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import com.mas.dashboard.service.CourseDataService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,9 @@ import java.util.Optional;
 public class CourseDataController {
 
     @Autowired
+    private CourseDataHelper courseDataHelper;
+
+    @Autowired
     private CourseDataService courseDataService;
 
     @Autowired
@@ -36,7 +40,7 @@ public class CourseDataController {
     @PostMapping("/data/upload")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
-        if(CourseDataHelper.checkExcelFormat(file)){
+        if(courseDataHelper.checkExcelFormat(file)){
             this.courseDataService.save(file);
 
             return ResponseEntity.ok(new MessageResponse("The file is Uploaded and data is saved in the db successfully !"));

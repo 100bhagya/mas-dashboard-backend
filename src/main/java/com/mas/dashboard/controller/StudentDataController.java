@@ -29,12 +29,15 @@ public class StudentDataController {
     private StudentDataService studentService;
 
     @Autowired
+    private StudentsDataHelper studentsDataHelper;
+
+    @Autowired
     AppUserRepository appUserRepository;
 
     @PostMapping("/data/upload")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?>upload(@RequestParam("file") MultipartFile file) {
-        if(StudentsDataHelper.checkExcelFormat(file)){
+        if(studentsDataHelper.checkExcelFormat(file)){
             this.studentService.save(file);
 
             return ResponseEntity.ok(new MessageResponse("The file is Uploaded and data is saved in the db successfully !"));

@@ -2,26 +2,36 @@ databaseChangeLog:
   - changeSet:
       id: SG1
       author: Harikesh
-      comment: Create leaderboard data table
+      comment: Create course  data table
       changes:
         - createTable:
             columns:
               - column:
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: leaderboard_pk
+                    primaryKeyName: coursedata_pk
                   name: id
                   type: BIGSERIAL
+              - column:
+                  name: course_name
+                  type: VARCHAR
               - column:
                   name: student_name
                   type: VARCHAR
               - column:
-                  name: total_marks
+                  name: email
+                  type: VARCHAR
+              - column:
+                  name: time_spent_mins
                   type: INTEGER
               - column:
-                  name: rank
+                  name: time_spent_hours
+                  type: Double
+              - column:
+                  name: progress
                   type: INTEGER
               - column:
                   name: roll_number
                   type: VARCHAR
-            tableName: leaderboard_data
+            tableName: course_data

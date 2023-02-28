@@ -1,12 +1,13 @@
 databaseChangeLog:
   - changeSet:
-      id: SG1
+      id: SG2
       author: Harikesh
       comment: Create students data table
       changes:
         - createTable:
             columns:
               - column:
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: students_data_pk
@@ -45,5 +46,8 @@ databaseChangeLog:
               - column:
                   name: marks_final
                   type: INTEGER
+              - column:
+                  name: email
+                  type: VARCHAR
             tableName: students_data
 

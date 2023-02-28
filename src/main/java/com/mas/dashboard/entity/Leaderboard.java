@@ -1,11 +1,13 @@
 package com.mas.dashboard.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Entity
 @Table(name = "leaderboard_data")
 public class Leaderboard {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private  String studentName;
@@ -16,13 +18,17 @@ public class Leaderboard {
 
     private String rollNumber;
 
+    @Email
+    private String Email;
 
-    public Leaderboard(Long id, String studentName, Integer totalMarks, Integer rank, String rollNumber) {
+
+    public Leaderboard(Long id, String studentName, Integer totalMarks, Integer rank, String rollNumber,String email) {
         this.id = id;
         this.studentName = studentName;
         this.totalMarks = totalMarks;
         Rank = rank;
         this.rollNumber = rollNumber;
+        Email=email;
     }
 
     public Leaderboard() {
@@ -30,6 +36,14 @@ public class Leaderboard {
 
     public Long getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public void setId(Long id) {
