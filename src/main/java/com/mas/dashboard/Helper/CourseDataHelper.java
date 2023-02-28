@@ -54,13 +54,8 @@ public class CourseDataHelper {
                 int cellId =1;
                 CourseData data = new CourseData();
 
-                Cell rollNo = row.getCell(6,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-
-                //check for empty cell
-                if (rollNo == null || rollNo.getCellType() == CellType.BLANK){
-                    break;
-                }
-                Optional<AppUser> user = appUserRepository.findByRollNo(rollNo.getStringCellValue());
+                Cell email = row.getCell(2,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                Optional<AppUser> user = appUserRepository.findByEmail(email.getStringCellValue());
 
                 if(user.isPresent()){
                     while (cells.hasNext()){

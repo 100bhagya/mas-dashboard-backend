@@ -46,5 +46,8 @@ databaseChangeLog:
               - column:
                   name: marks_final
                   type: INTEGER
+              - column:
+                  name: email
+                  type: VARCHAR
             tableName: students_data
 

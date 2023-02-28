@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: SG2
+      id: SG1
       author: Harikesh
       comment: Create leaderboard data table
       changes:
@@ -24,5 +24,8 @@ databaseChangeLog:
                   type: INTEGER
               - column:
                   name: roll_number
+                  type: VARCHAR
+              - column:
+                  name: email
                   type: VARCHAR
             tableName: leaderboard_data

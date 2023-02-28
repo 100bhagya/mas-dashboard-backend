@@ -58,13 +58,9 @@ public class StudentsDataHelper {
                 //check for empty cell
 
 
-                Cell rollNo = row.getCell(0,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                //check for empty cell
-                if (rollNo == null || rollNo.getCellType() == CellType.BLANK){
-                    break;
-                }
-
-                Optional<AppUser> user = appUserRepository.findByRollNo(rollNo.getStringCellValue());
+                Cell email = row.getCell(11,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                //check for email
+             Optional<AppUser> user = appUserRepository.findByEmail(email.getStringCellValue());
                 if(user.isPresent()){
                     while (cells.hasNext()){
                         Cell cell = cells.next();
@@ -101,6 +97,9 @@ public class StudentsDataHelper {
                                 break;
                             case 11:
                                 data.setMarksFinal((int) cell.getNumericCellValue());
+                                break;
+                            case 12:
+                                data.setEmail(cell.getStringCellValue());
                                 break;
                             default:
                                 break;

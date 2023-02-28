@@ -58,13 +58,8 @@ public class LeaderboardHelper {
 
                 Leaderboard data = new Leaderboard();
 
-                Cell rollNo = row.getCell(3,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-
-                //check for empty cell
-                if (rollNo == null || rollNo.getCellType() == CellType.BLANK){
-                    break;
-                }
-                Optional<AppUser> user = appUserRepository.findByRollNo(rollNo.getStringCellValue());
+                Cell email = row.getCell(4,Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                Optional<AppUser> user = appUserRepository.findByEmail(email.getStringCellValue());
 
                 if(user.isPresent()){
                     while (cells.hasNext()){
@@ -81,6 +76,9 @@ public class LeaderboardHelper {
                                 break;
                             case 4:
                                 data.setRollNumber( cell.getStringCellValue() );
+                                break;
+                            case 5:
+                                data.setEmail( cell.getStringCellValue() );
                                 break;
                             default:
                                 break;
