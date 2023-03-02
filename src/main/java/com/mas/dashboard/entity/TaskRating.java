@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class TaskRating {
 
   private Long studentId;
 
-  private Double rating;
+  private BigDecimal rating;
 
   private Boolean deleted;
 

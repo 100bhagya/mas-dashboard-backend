@@ -65,11 +65,6 @@ public class LeaderboardHelper {
                             break;
                         default:
                             break;
-
-
-
-
-
                     }
 
                     cellId++;

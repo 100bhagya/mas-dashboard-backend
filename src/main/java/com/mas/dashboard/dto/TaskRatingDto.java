@@ -2,6 +2,8 @@ package com.mas.dashboard.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class TaskRatingDto {
   private Long id;
@@ -12,7 +14,7 @@ public class TaskRatingDto {
 
   private Long studentId;
 
-  private Double rating;
+  private BigDecimal rating;
 
   private Boolean deleted;
 }
