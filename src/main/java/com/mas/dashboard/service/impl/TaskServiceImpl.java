@@ -2,11 +2,7 @@ package com.mas.dashboard.service.impl;
 
 import com.mas.dashboard.dto.*;
 import com.mas.dashboard.entity.*;
-import com.mas.dashboard.repository.DailyWordRepository;
-import com.mas.dashboard.repository.DailyWordsResponseRepository;
-import com.mas.dashboard.repository.TaskRatingRepository;
-import com.mas.dashboard.repository.WeeklySummaryRepository;
-import com.mas.dashboard.repository.WeeklySummaryResponseRepository;
+import com.mas.dashboard.repository.*;
 import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +29,9 @@ public class TaskServiceImpl implements TaskService {
 
   @Autowired
   private WeeklySummaryResponseRepository weeklySummaryResponseRepository;
+
+  @Autowired
+  private NonTechArticleResponseRepository nonTechArticleResponseRepository;
 
   @Autowired
   private TaskRatingRepository taskRatingRepository;
@@ -333,4 +332,69 @@ public class TaskServiceImpl implements TaskService {
     taskRating.setRating(taskRatingDto.getRating());
     return this.taskRatingRepository.save(taskRating);
   }
+
+  public NonTechArticleResponse saveNonTechArticleResponse (final NonTechArticleResponseDto nonTechArticleResponseDto) {
+    final Optional<NonTechArticleResponse> optionalNonTechArticleResponse = this.nonTechArticleResponseRepository.findByStudentIdAndNonTechArticleId(nonTechArticleResponseDto.getStudentId(), nonTechArticleResponseDto.getNonTechArticleId());
+    if (optionalNonTechArticleResponse.isPresent()) {
+      throw new IllegalArgumentException("Weekly summary response already exists");
+    }
+    final NonTechArticleResponse nonTechArticleResponse = new NonTechArticleResponse();
+    nonTechArticleResponse.setNonTechArticleId(nonTechArticleResponseDto.getNonTechArticleId());
+    nonTechArticleResponse.setStudentId(nonTechArticleResponseDto.getStudentId());
+    nonTechArticleResponse.setResponse(nonTechArticleResponseDto.getResponse());
+    nonTechArticleResponse.setCreatedBy(nonTechArticleResponseDto.getStudentId());
+    nonTechArticleResponse.setCreatedDate(new Date());
+    nonTechArticleResponse.setUpdatedBy(nonTechArticleResponseDto.getStudentId());
+    nonTechArticleResponse.setUpdatedDate(new Date());
+    if (nonTechArticleResponseDto.getResponse().isEmpty()) {
+      nonTechArticleResponse.setCompleted(Boolean.FALSE);
+    } else {
+      nonTechArticleResponse.setCompleted(Boolean.TRUE);
+    }
+    return this.nonTechArticleResponseRepository.save(nonTechArticleResponse);
+  }
+
+  public NonTechArticleResponse getNonTechArticleResponse (final Long nonTechArticleId) {
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+    final Optional<NonTechArticleResponse> optionalNonTechArticleResponse = this.nonTechArticleResponseRepository.findByStudentIdAndNonTechArticleId(loggedInUser.getId(), nonTechArticleId);
+    if (!optionalNonTechArticleResponse.isPresent()) {
+      return null;
+    }
+    return optionalNonTechArticleResponse.get();
+  }
+
+  //  returns Map as [weekNo -> {article1CompleteStatus, article2CompleteStatus}]
+//  public Map<Integer,boolean[]> nonTechArticleResponseStatus() {
+//    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+//    List<NonTechArticleResponse> nonTechArticleResponseList = this.nonTechArticleResponseRepository.findByStudentIdAndNonTechArticleId(loggedInUser.getId(), true);
+//    Map<Integer, boolean[]> mapOfWeekNoArticleStatus = new HashMap<>();
+//    nonTechArticleResponseList.forEach( weeklySummaryResponse -> {
+//      Optional<WeeklySummary> weeklySummary = this.weeklySummaryRepository.findById(weeklySummaryResponse.getWeeklySummaryId());
+//      int weekNo = weeklySummary.get().getWeekNumber();
+//      int articleNo = weeklySummary.get().getArticleNumber();
+//      boolean[] arr = mapOfWeekNoArticleStatus.getOrDefault(weekNo, new boolean[2]);
+//      arr[articleNo - 1] = true;
+//      mapOfWeekNoArticleStatus.put(weekNo, arr);
+//    });
+//    return mapOfWeekNoArticleStatus;
+//  }
+
+
+  public NonTechArticleResponse updateNonTechArticleResponse (final NonTechArticleResponseDto nonTechArticleResponseDto) {
+    final Optional<NonTechArticleResponse> optionalNonTechArticleResponse = this.nonTechArticleResponseRepository.findByStudentIdAndNonTechArticleId(nonTechArticleResponseDto.getStudentId(),
+            nonTechArticleResponseDto.getNonTechArticleId());
+    if (!optionalNonTechArticleResponse.isPresent()) {
+      throw new IllegalArgumentException("Weekly summary response not found for the given student and word id");
+    }
+    final NonTechArticleResponse nonTechArticleResponse = optionalNonTechArticleResponse.get();
+    nonTechArticleResponse.setResponse(nonTechArticleResponseDto.getResponse());
+    nonTechArticleResponse.setUpdatedDate(new Date());
+    if (!nonTechArticleResponseDto.getResponse().isEmpty()) {
+      nonTechArticleResponse.setCompleted(Boolean.TRUE);
+    }else{
+      nonTechArticleResponse.setCompleted(Boolean.FALSE);
+    }
+    return this.nonTechArticleResponseRepository.save(nonTechArticleResponse);
+  }
+
 }

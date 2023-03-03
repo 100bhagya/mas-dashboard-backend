@@ -38,4 +38,12 @@ public interface TaskService {
   List<TaskRating> getAllTaskRating (final String category);
 
   TaskRating updateTaskRating (final TaskRatingDto taskRatingDto);
+
+//  Map<Integer, boolean[]> nonTechArticleResponseStatus();
+
+  NonTechArticleResponse saveNonTechArticleResponse (final NonTechArticleResponseDto nonTechArticleResponseDto);
+
+  NonTechArticleResponse getNonTechArticleResponse (final Long nonTechArticleId);
+
+  NonTechArticleResponse updateNonTechArticleResponse (final NonTechArticleResponseDto nonTechArticleResponseDto);
 }

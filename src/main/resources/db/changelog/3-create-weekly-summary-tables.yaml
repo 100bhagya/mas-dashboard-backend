@@ -102,3 +102,49 @@ databaseChangeLog:
                   type: TIMESTAMP WITH TIME ZONE
             remarks: This table stores weekly summary response
             tableName: weekly_summary_response
+
+  - changeSet:
+      id: SG1
+      author: Harikesh
+      comment: Create non tech article response table
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: non_tech_response_pk
+                  name: id
+                  type: BIGSERIAL
+              - column:
+                  name: non_tech_article_id
+                  type: INTEGER
+              - column:
+                  name: student_id
+                  type: INTEGER
+              - column:
+                  name: response
+                  type: TEXT
+              - column:
+                  name: completed
+                  type: BOOLEAN
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: now()
+                  name: created_date
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP WITH TIME ZONE
+            remarks: This table stores non tech article response
+            tableName: non_tech_article_response
