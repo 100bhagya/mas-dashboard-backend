@@ -11,4 +11,8 @@ public class NonTechArticleResponseDto {
     private String response;
 
     private Boolean completed;
+
+    private Integer weekNo;
+
+    private  Integer articleNo;
 }

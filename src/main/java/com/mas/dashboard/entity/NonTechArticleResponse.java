@@ -24,6 +24,10 @@ public class NonTechArticleResponse {
     private String response;
     private Boolean completed;
 
+    private Integer weekNo;
+
+    private Integer articleNo;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     @CreatedDate

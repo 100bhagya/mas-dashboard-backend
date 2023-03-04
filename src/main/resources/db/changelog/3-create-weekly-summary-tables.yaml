@@ -130,6 +130,12 @@ databaseChangeLog:
                   name: completed
                   type: BOOLEAN
               - column:
+                  name: week_no
+                  type: INTEGER
+              - column:
+                  name: article_no
+                  type: INTEGER
+              - column:
                   constraints:
                     nullable: false
                   name: created_by
