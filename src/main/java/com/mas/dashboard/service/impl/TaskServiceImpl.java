@@ -261,11 +261,19 @@ public class TaskServiceImpl implements TaskService {
   public Map<Integer,boolean[]> weeklySummaryResponseStatus() {
     AppUserDetailsImpl loggedInUser = getLoggedInUser();
     List<WeeklySummaryResponse> weeklySummaryResponseList = this.weeklySummaryResponseRepository.findByStudentIdAndCompleted(loggedInUser.getId(), true);
+//    System.out.println("weekly summary list");
+//    System.out.println(weeklySummaryResponseList);
     Map<Integer, boolean[]> mapOfWeekNoArticleStatus = new HashMap<>();
     weeklySummaryResponseList.forEach( weeklySummaryResponse -> {
       Optional<WeeklySummary> weeklySummary = this.weeklySummaryRepository.findById(weeklySummaryResponse.getWeeklySummaryId());
+//      weeklySummaryResponse.getWeeklySummaryId()
+//      System.out.println(weeklySummaryResponse.getWeeklySummaryId());
+//      System.out.println(weeklySummary);
       int weekNo = weeklySummary.get().getWeekNumber();
       int articleNo = weeklySummary.get().getArticleNumber();
+      System.out.println(weekNo);
+      System.out.println(articleNo);
+
       boolean[] arr = mapOfWeekNoArticleStatus.getOrDefault(weekNo, new boolean[2]);
       arr[articleNo - 1] = true;
       mapOfWeekNoArticleStatus.put(weekNo, arr);
@@ -364,20 +372,23 @@ public class TaskServiceImpl implements TaskService {
   }
 
   //  returns Map as [weekNo -> {article1CompleteStatus, article2CompleteStatus}]
-//  public Map<Integer,boolean[]> nonTechArticleResponseStatus() {
-//    AppUserDetailsImpl loggedInUser = getLoggedInUser();
-//    List<NonTechArticleResponse> nonTechArticleResponseList = this.nonTechArticleResponseRepository.findByStudentIdAndNonTechArticleId(loggedInUser.getId(), true);
-//    Map<Integer, boolean[]> mapOfWeekNoArticleStatus = new HashMap<>();
-//    nonTechArticleResponseList.forEach( weeklySummaryResponse -> {
-//      Optional<WeeklySummary> weeklySummary = this.weeklySummaryRepository.findById(weeklySummaryResponse.getWeeklySummaryId());
-//      int weekNo = weeklySummary.get().getWeekNumber();
-//      int articleNo = weeklySummary.get().getArticleNumber();
+  public Map<Integer,boolean[]> nonTechArticleResponseStatus() {
+    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+    List<NonTechArticleResponse> nonTechArticleResponseList = this.nonTechArticleResponseRepository.findByStudentIdAndCompleted(loggedInUser.getId(), true);
+    System.out.println(nonTechArticleResponseList);
+    Map<Integer, boolean[]> mapOfWeekNoArticleStatus = new HashMap<>();
+    nonTechArticleResponseList.forEach( nonTechArticleResponse -> {
+      System.out.println(nonTechArticleResponse);
+
+
+//      int articleNo = 1;
+//      int weekNo=2;
 //      boolean[] arr = mapOfWeekNoArticleStatus.getOrDefault(weekNo, new boolean[2]);
 //      arr[articleNo - 1] = true;
 //      mapOfWeekNoArticleStatus.put(weekNo, arr);
-//    });
-//    return mapOfWeekNoArticleStatus;
-//  }
+    });
+    return mapOfWeekNoArticleStatus;
+  }
 
 
   public NonTechArticleResponse updateNonTechArticleResponse (final NonTechArticleResponseDto nonTechArticleResponseDto) {

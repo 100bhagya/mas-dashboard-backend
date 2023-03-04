@@ -39,7 +39,7 @@ public interface TaskService {
 
   TaskRating updateTaskRating (final TaskRatingDto taskRatingDto);
 
-//  Map<Integer, boolean[]> nonTechArticleResponseStatus();
+  Map<Integer, boolean[]> nonTechArticleResponseStatus();
 
   NonTechArticleResponse saveNonTechArticleResponse (final NonTechArticleResponseDto nonTechArticleResponseDto);
 

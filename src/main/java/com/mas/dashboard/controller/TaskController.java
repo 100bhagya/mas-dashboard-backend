@@ -141,11 +141,11 @@ public class TaskController {
         return new ResponseEntity<>(this.taskService.getNonTechArticleResponse(nonTechArticleId), HttpStatus.OK);
     }
 
-//    @GetMapping("/non-tech-article-response-status")
-//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-//    public ResponseEntity<Map<Integer, boolean[]>> weeklySummaryResponseStatus () {
-//        return new ResponseEntity<Map<Integer, boolean[]>>(this.taskService.weeklySummaryResponseStatus(), HttpStatus.OK);
-//    }
+    @GetMapping("/non-tech-article-response-status")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<Integer, boolean[]>> nonTechArticleResponseStatus () {
+        return new ResponseEntity<Map<Integer, boolean[]>>(this.taskService.nonTechArticleResponseStatus(), HttpStatus.OK);
+    }
 
     @PutMapping("/non-tech-article-response")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
