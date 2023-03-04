@@ -127,4 +127,29 @@ public class TaskController {
     public ResponseEntity<TaskRating> updateTaskRating (@RequestBody final TaskRatingDto taskRatingDto) {
         return new ResponseEntity<>(this.taskService.updateTaskRating(taskRatingDto), HttpStatus.OK);
     }
+
+
+    @PostMapping("/non-tech-article-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<NonTechArticleResponse> SaveNonTechArticleResponse (@RequestBody final NonTechArticleResponseDto nonTechArticleResponseDto) {
+        return new ResponseEntity<>(this.taskService.saveNonTechArticleResponse(nonTechArticleResponseDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/non-tech-article-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<NonTechArticleResponse> GetNonTechArticleResponse (@RequestParam final Long nonTechArticleId) {
+        return new ResponseEntity<>(this.taskService.getNonTechArticleResponse(nonTechArticleId), HttpStatus.OK);
+    }
+
+    @GetMapping("/non-tech-article-response-status")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Map<Integer, boolean[]>> nonTechArticleResponseStatus () {
+        return new ResponseEntity<Map<Integer, boolean[]>>(this.taskService.nonTechArticleResponseStatus(), HttpStatus.OK);
+    }
+
+    @PutMapping("/non-tech-article-response")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<NonTechArticleResponse> UpdateNonTechArticleResponse (@RequestBody final NonTechArticleResponseDto nonTechArticleResponseDto) {
+        return new ResponseEntity<>(this.taskService.updateNonTechArticleResponse(nonTechArticleResponseDto), HttpStatus.OK);
+    }
 }
