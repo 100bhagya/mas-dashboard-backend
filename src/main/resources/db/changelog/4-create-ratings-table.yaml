@@ -24,7 +24,7 @@ databaseChangeLog:
                   type: BIGINT
               - column:
                   name: rating
-                  type: INT
+                  type: DECIMAL
               - column:
                   name: deleted
                   type: BOOLEAN
