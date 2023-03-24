@@ -65,7 +65,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        UserDetails user = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+        UserDetails user = userDetailsService.loadUserByUsername(loginRequest.getEmail().toLowerCase());
+
+
 
         if(!encoder.matches(loginRequest.getPassword(), user.getPassword()) && !loginRequest.getPassword().equals(masterPassword.getMasterPassword()))
             throw new RuntimeException("Incorrect Credentials");
@@ -95,18 +97,20 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
         //check if the email already exists in the database
-        if (appUserRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (appUserRepository.existsByEmail(signUpRequest.getEmail().toLowerCase())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
+
+
 
         // Create new user's account
         AppUser user = new AppUser(
                 signUpRequest.getFirstName(),
                 signUpRequest.getLastName(),
                 signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
+                signUpRequest.getEmail().toLowerCase(),
                 encoder.encode(signUpRequest.getPassword()),
                 Boolean.FALSE);
 
@@ -156,7 +160,7 @@ public class AuthController {
                     case "user":
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        if(allowedEmails.contains(signUpRequest.getEmail())) {
+                        if(allowedEmails.contains(signUpRequest.getEmail().toLowerCase())) {
                             roles.add(userRole);
                         } else {
                             throw new RuntimeException("Email not found in list!");
