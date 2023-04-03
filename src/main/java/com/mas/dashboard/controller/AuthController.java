@@ -187,7 +187,7 @@ public class AuthController {
 
     @PostMapping("/forgot_password")
     public String processForgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
-        String email = forgotPasswordRequest.getEmail();
+        String email = forgotPasswordRequest.getEmail().toLowerCase();
         String token = UUID.randomUUID().toString();
 
         Optional<AppUser> optionalUser = appUserRepository.findByEmail(email);
@@ -197,7 +197,7 @@ public class AuthController {
             user.setPasswordResetToken(token);
             appUserRepository.save(user);
             response = response + "Hi " + user.getFirstName() + " an email to reset your password has been sent to your email address";
-            String resetPasswordLink = "http://localhost:3000/resetPassword/" + token;
+            String resetPasswordLink = "https://dashboard.myanalyticsschool.com/resetPassword/" + token;
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("gauravsaubhagya3@gmail.com");
             message.setTo(email);
