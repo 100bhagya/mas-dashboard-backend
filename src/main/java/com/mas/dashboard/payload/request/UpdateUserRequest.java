@@ -12,7 +12,7 @@ public class UpdateUserRequest {
     private String lastName;
 
     @NotBlank
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 50)
     private String username;
 
     private String profilePic;
