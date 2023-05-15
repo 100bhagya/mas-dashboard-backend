@@ -255,6 +255,39 @@ public class AuthController {
         allowedEmails.add("vangala.poojasri.civ20@itbhu.ac.in");
 
 
+        allowedEmails.add("abhinavsharma.chy18@itbhu.ac.in");
+        allowedEmails.add("divya.parvathaneni419@gmail.com");
+        allowedEmails.add("lakshyasolanki12@gmail.com");
+        allowedEmails.add("praneetavanumu@gmail.com");
+        allowedEmails.add("anshbal1203@gmail.com");
+        allowedEmails.add("kamalkumarverma.phe22@itbhu.ac.in");
+        allowedEmails.add("peddinti.saiskumar.cer19@itbhu.ac.in");
+        allowedEmails.add("kolisaurabhnarayan.phe22@itbhu.ac.in");
+        allowedEmails.add("manojitbiswas970@gmail.com");
+        allowedEmails.add("bhavya.jain.bce19@itbhu.ac.in");
+        allowedEmails.add("jahnavi.iitkgp@gmail.com");
+        allowedEmails.add("sahusnehal28@gmail.com");
+        allowedEmails.add("amankundu32@gmail.com");
+        allowedEmails.add("357realritz@gmail.com");
+        allowedEmails.add("rdarshan1203@gmail.com");
+        allowedEmails.add("rajatkumarsahu5544@gmail.com");
+        allowedEmails.add("njayavinash3085@gmail.com");
+        allowedEmails.add("chalamcharlacharan7887@gmail.com");
+        allowedEmails.add("pranjalnaithani44@gmail.com");
+        allowedEmails.add("nishant.student.phe19@iitbhu.ac.in");
+        allowedEmails.add("ritikapapai@gmail.com");
+        allowedEmails.add("tembhareaman2002@gmail.com");
+        allowedEmails.add("chaitanya_bpal@ph.iitr.ac.in");
+        allowedEmails.add("vaibhavsemwal007@gmail.com");
+        allowedEmails.add("divyanshu.chauhan.chy19@itbhu.ac.in");
+        allowedEmails.add("vizorex.edu@gmail.com");
+
+
+
+
+
+
+
         if (strRoles == null) {
             throw new RuntimeException("Error: Role is not found.");
         } else {
