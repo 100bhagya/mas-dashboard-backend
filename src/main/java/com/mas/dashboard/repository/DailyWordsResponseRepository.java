@@ -14,9 +14,10 @@ import java.util.Optional;
 @Repository
 public interface DailyWordsResponseRepository extends JpaRepository<DailyWordsResponse, Long> {
 
-  String GET_WORDS_RESPONSE_COMPLETED_STATUS = "select dwr.student_id as studentId, dwr.completed as completed, dw.date as date" +
-      " from daily_words_response dwr inner join daily_words dw on dw.id = dwr.daily_words_id" +
-      " where dwr.student_id = :studentId and dw.date >= :fromDate and dw.date <= :toDate and dw.deleted = false";
+  String GET_WORDS_RESPONSE_COMPLETED_STATUS = "select distinct dw.id, dwr.student_id, dwr.completed, cast(dw.date as date)" +
+          " from daily_words dw left join daily_words_response dwr on dw.id = dwr.daily_words_id and dwr.student_id = :studentId" +
+          " where cast(dw.date as date) >= :fromDate" +
+          " and cast(dw.date as date) <= :toDate and dw.deleted = false order by date";
 
   Optional<DailyWordsResponse> findByStudentIdAndDailyWordsId (final Long studentId, final Long dailyWordsId);
 

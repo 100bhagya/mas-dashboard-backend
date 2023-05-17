@@ -11,7 +11,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 
+import javax.persistence.Tuple;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -161,26 +163,24 @@ public class TaskServiceImpl implements TaskService {
   //    Date -> {partialComplete, completed}
   //    {false, false} -> No Response, {true, false} -> One Response only, {true, true} -> Both response
   public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate) {
-    final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(fromDate, toDate);
     AppUserDetailsImpl loggedInUser = getLoggedInUser();
     Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>();
-    DailyWordTuples.forEach(tuple -> {
-      final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(loggedInUser.getId(), tuple.getId());
-      if(optionalDailyWordsResponse.isPresent()){
-        List<Boolean> al = new ArrayList<>();
-        al.add(true);
-        al.add(optionalDailyWordsResponse.get().getCompleted());
-        Date newDate = tuple.getDate();
-        Calendar c = Calendar.getInstance();
-        dateCompletedStatusMap.put(newDate, al);
-      }else{
-        List<Boolean> al = new ArrayList<>();
-        al.add(false);
-        al.add(false);
-        Date newDate = tuple.getDate();
-        dateCompletedStatusMap.put(newDate, al);
+    final List<Tuple> dailyWordStatusTuples = this.dailyWordsResponseRepository.checkCompletedStatusByStudentIdAndDate(fromDate, toDate, loggedInUser.getId());
+    dailyWordStatusTuples.forEach(tuple -> {
+      List<Boolean> statusPair = new ArrayList<>();
+      if (!ObjectUtils.isEmpty(tuple.get("student_id"))) {
+        statusPair.add(true);
+      } else {
+        statusPair.add(false);
+        statusPair.add(false);
       }
-
+      if (!ObjectUtils.isEmpty(tuple.get("completed")) && Boolean.TRUE.equals(tuple.get("completed"))) {
+        statusPair.add(true);
+      }
+      if (ObjectUtils.isEmpty(tuple.get("completed")) && statusPair.size() == 1) {
+        statusPair.add(false);
+      }
+      dateCompletedStatusMap.put((Date) tuple.get("date"), statusPair);
     });
     return dateCompletedStatusMap;
   }
