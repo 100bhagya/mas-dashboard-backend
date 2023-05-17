@@ -194,7 +194,7 @@ public class TaskServiceImpl implements TaskService {
     Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>(dailyWordTuples.size());
     Calendar c = Calendar.getInstance();
 
-    // Retrieve all DailyWordsResponse entities for the given loggedInUser
+    // Retrieving all DailyWordsResponse entities for the given loggedInUser
     List<Long> dailyWordsIds = dailyWordTuples.stream()
             .map(DailyWords::getId)
             .collect(Collectors.toList());
@@ -205,7 +205,7 @@ public class TaskServiceImpl implements TaskService {
     Map<Long, DailyWordsResponse> responseMap = dailyWordsResponses.stream()
             .collect(Collectors.toMap(DailyWordsResponse::getDailyWordsId, Function.identity()));
 
-    // Create a SimpleDateFormat object to format the date
+    // Creating a SimpleDateFormat object to format the date
     SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     outputDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -233,7 +233,6 @@ public class TaskServiceImpl implements TaskService {
         Date convertedDate = outputDateFormat.parse(formattedDateString);
         dateCompletedStatusMap.put(convertedDate, al);
       } catch (ParseException e) {
-        // Handle the exception or rethrow it as needed
         e.printStackTrace();
       }
     }
