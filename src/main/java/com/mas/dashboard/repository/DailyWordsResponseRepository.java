@@ -20,6 +20,10 @@ public interface DailyWordsResponseRepository extends JpaRepository<DailyWordsRe
 
   Optional<DailyWordsResponse> findByStudentIdAndDailyWordsId (final Long studentId, final Long dailyWordsId);
 
+  @Query("SELECT dwr FROM DailyWordsResponse dwr WHERE dwr.studentId = :studentId AND dwr.dailyWordsId IN :dailyWordsIds")
+  List<DailyWordsResponse> findByStudentIdAndDailyWordsIdIn(@Param("studentId") Long studentId, @Param("dailyWordsIds") List<Long> dailyWordsIds);
+
+
   @Query(nativeQuery = true, value = GET_WORDS_RESPONSE_COMPLETED_STATUS)
   List<Tuple> checkCompletedStatusByStudentIdAndDate (@Param("fromDate") final Date fromDate,
                                                       @Param("toDate") final Date toDate,

@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -160,31 +163,83 @@ public class TaskServiceImpl implements TaskService {
 
   //    Date -> {partialComplete, completed}
   //    {false, false} -> No Response, {true, false} -> One Response only, {true, true} -> Both response
-  public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate) {
-    final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(fromDate, toDate);
+//  public Map<Date, List<Boolean>> checkDailyWordsResponseStatus (final Date fromDate, final Date toDate) {
+//    final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(fromDate, toDate);
+//    AppUserDetailsImpl loggedInUser = getLoggedInUser();
+//    Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>();
+//    DailyWordTuples.forEach(tuple -> {
+//      final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(loggedInUser.getId(), tuple.getId());
+//      if(optionalDailyWordsResponse.isPresent()){
+//        List<Boolean> al = new ArrayList<>();
+//        al.add(true);
+//        al.add(optionalDailyWordsResponse.get().getCompleted());
+//        Date newDate = tuple.getDate();
+//        Calendar c = Calendar.getInstance();
+//        dateCompletedStatusMap.put(newDate, al);
+//      }else{
+//        List<Boolean> al = new ArrayList<>();
+//        al.add(false);
+//        al.add(false);
+//        Date newDate = tuple.getDate();
+//        dateCompletedStatusMap.put(newDate, al);
+//      }
+//
+//    });
+//    return dateCompletedStatusMap;
+//  }
+
+  public Map<Date, List<Boolean>> checkDailyWordsResponseStatus(Date fromDate, Date toDate) {
+    List<DailyWords> dailyWordTuples = this.dailyWordRepository.findByDateBetween(fromDate, toDate);
     AppUserDetailsImpl loggedInUser = getLoggedInUser();
-    Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>();
-    DailyWordTuples.forEach(tuple -> {
-      final Optional<DailyWordsResponse> optionalDailyWordsResponse = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsId(loggedInUser.getId(), tuple.getId());
-      if(optionalDailyWordsResponse.isPresent()){
-        List<Boolean> al = new ArrayList<>();
+    Map<Date, List<Boolean>> dateCompletedStatusMap = new HashMap<>(dailyWordTuples.size());
+    Calendar c = Calendar.getInstance();
+
+    // Retrieve all DailyWordsResponse entities for the given loggedInUser
+    List<Long> dailyWordsIds = dailyWordTuples.stream()
+            .map(DailyWords::getId)
+            .collect(Collectors.toList());
+    List<DailyWordsResponse> dailyWordsResponses = this.dailyWordsResponseRepository.findByStudentIdAndDailyWordsIdIn(loggedInUser.getId(), dailyWordsIds);
+//    System.out.println(dailyWordsResponses);
+
+    // Creating a map of DailyWords ID to DailyWordsResponse
+    Map<Long, DailyWordsResponse> responseMap = dailyWordsResponses.stream()
+            .collect(Collectors.toMap(DailyWordsResponse::getDailyWordsId, Function.identity()));
+
+    // Create a SimpleDateFormat object to format the date
+    SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    outputDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+    for (DailyWords tuple : dailyWordTuples) {
+      List<Boolean> al = new ArrayList<>(2);
+
+      DailyWordsResponse dailyWordsResponse = responseMap.get(tuple.getId());
+      if (dailyWordsResponse != null) {
         al.add(true);
-        al.add(optionalDailyWordsResponse.get().getCompleted());
-        Date newDate = tuple.getDate();
-        Calendar c = Calendar.getInstance();
-        dateCompletedStatusMap.put(newDate, al);
-      }else{
-        List<Boolean> al = new ArrayList<>();
+        al.add(dailyWordsResponse.getCompleted());
+      } else {
         al.add(false);
         al.add(false);
-        Date newDate = tuple.getDate();
-        dateCompletedStatusMap.put(newDate, al);
       }
 
-    });
+      c.setTime(tuple.getDate());
+      c.set(Calendar.HOUR_OF_DAY, 0);
+      c.set(Calendar.MINUTE, 0);
+      c.set(Calendar.SECOND, 0);
+      c.set(Calendar.MILLISECOND, 0);
+      Date formattedDate = c.getTime();
+      String formattedDateString = outputDateFormat.format(formattedDate);
+
+      try {
+        Date convertedDate = outputDateFormat.parse(formattedDateString);
+        dateCompletedStatusMap.put(convertedDate, al);
+      } catch (ParseException e) {
+        // Handle the exception or rethrow it as needed
+        e.printStackTrace();
+      }
+    }
+
     return dateCompletedStatusMap;
   }
-
   public List<DailyWords> getMonthlyWords (final Date startDate, final Date endDate) {
     final List<DailyWords> DailyWordTuples = this.dailyWordRepository.findByDateBetween(startDate, endDate);
     if (DailyWordTuples.isEmpty()) {
