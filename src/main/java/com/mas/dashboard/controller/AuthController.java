@@ -282,6 +282,12 @@ public class AuthController {
         allowedEmails.add("divyanshu.chauhan.chy19@itbhu.ac.in");
         allowedEmails.add("vizorex.edu@gmail.com");
 
+        allowedEmails.add("keshavtarun099@gmail.com");
+        allowedEmails.add("yashrathore3012@gmail.com");
+        allowedEmails.add("sumankhansdagts@gmail.com");
+
+
+
 
 
 
