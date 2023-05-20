@@ -7,7 +7,6 @@ import com.mas.dashboard.security.services.AppUserDetailsImpl;
 import com.mas.dashboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -177,10 +176,16 @@ public class TaskServiceImpl implements TaskService {
       if (!ObjectUtils.isEmpty(tuple.get("completed")) && Boolean.TRUE.equals(tuple.get("completed"))) {
         statusPair.add(true);
       }
-      if (ObjectUtils.isEmpty(tuple.get("completed")) && statusPair.size() == 1) {
+      if (!ObjectUtils.isEmpty(tuple.get("completed")) && Boolean.FALSE.equals(tuple.get("completed")) &&
+              statusPair.size() == 1 ) {
         statusPair.add(false);
       }
-      dateCompletedStatusMap.put((Date) tuple.get("date"), statusPair);
+      Date gmtDate = (Date) tuple.get("date");
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(gmtDate);
+      calendar.add(Calendar.HOUR_OF_DAY, 5);
+      calendar.add(Calendar.MINUTE, 30);
+      dateCompletedStatusMap.put(calendar.getTime(), statusPair);
     });
     return dateCompletedStatusMap;
   }
