@@ -291,6 +291,19 @@ public class AuthController {
         allowedEmails.add("goel.madhur16@gmail.com");
         allowedEmails.add("22n0259@iitb.ac.in");
 
+        allowedEmails.add("aditi.sammi.bce19@itbhu.ac.in");
+        allowedEmails.add("sumit.kumar.chy19@itbhu.ac.in");
+        allowedEmails.add("shivam.pandey.mec20@iitbhu.ac.in");
+        allowedEmails.add("anuragofficial338@gmail.com");
+        allowedEmails.add("ankittiwary9888@gmail.com");
+        allowedEmails.add("sejalmakkar1204@gmail.com");
+        allowedEmails.add("lakshvashishtha1208@gmail.com");
+        allowedEmails.add("f20200804@pilani.bits-pilani.ac.in");
+        allowedEmails.add("preksha.student.bme19@itbhu.ac.in");
+        allowedEmails.add("yrushikesh.kumar.mat19@itbhu.ac.in");
+
+
+
 
 
 
