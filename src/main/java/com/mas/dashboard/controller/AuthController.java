@@ -290,7 +290,6 @@ public class AuthController {
         allowedEmails.add("sasikantghadai292@gmail.com");
         allowedEmails.add("goel.madhur16@gmail.com");
         allowedEmails.add("22n0259@iitb.ac.in");
-
         allowedEmails.add("aditi.sammi.bce19@itbhu.ac.in");
         allowedEmails.add("sumit.kumar.chy19@itbhu.ac.in");
         allowedEmails.add("shivam.pandey.mec20@iitbhu.ac.in");
@@ -301,6 +300,23 @@ public class AuthController {
         allowedEmails.add("f20200804@pilani.bits-pilani.ac.in");
         allowedEmails.add("preksha.student.bme19@itbhu.ac.in");
         allowedEmails.add("yrushikesh.kumar.mat19@itbhu.ac.in");
+        allowedEmails.add("vk561402@gmail.com");
+        allowedEmails.add("aman.singh.apd19@itbhu.ac.in");
+        allowedEmails.add("aaryanbhardwaj01@gmail.com");
+        allowedEmails.add("tkprincekumar24091999@gmail.com");
+        allowedEmails.add("kanderis.prashritha.civ19@itbhu.ac.in");
+        allowedEmails.add("murshidvr@gmail.com");
+        allowedEmails.add("chekka.lohithsai.mec20@itbhu.ac.in");
+        allowedEmails.add("nathala.kreddy.mec20@itbhu.ac.in");
+
+
+
+
+
+
+
+
+
 
 
 
