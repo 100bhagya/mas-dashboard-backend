@@ -308,6 +308,8 @@ public class AuthController {
         allowedEmails.add("murshidvr@gmail.com");
         allowedEmails.add("chekka.lohithsai.mec20@itbhu.ac.in");
         allowedEmails.add("nathala.kreddy.mec20@itbhu.ac.in");
+        allowedEmails.add("aryavardhan.pateriya.cd.mec20@itbhu.ac.in");
+        allowedEmails.add("aadityasharma.2k@gmail.com");
 
 
 
